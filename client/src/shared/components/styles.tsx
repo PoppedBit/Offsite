@@ -19,7 +19,8 @@ export const Form = styled('form')({
   },
 
   '& > button': {
-    marginTop: '15px'
+    marginTop: '15px 0px 5px 0px',
+    width: '100%',
   }
 });
 

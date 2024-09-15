@@ -67,6 +67,8 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// TODO Validate Password
+
 	// Hash the password
 	salt, err := GenerateSalt()
 	if err != nil {
@@ -205,4 +207,71 @@ func (h *Handler) AccountSettingsHandler(w http.ResponseWriter, r *http.Request)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(accountSettings)
+}
+
+type UpdatePasswordRequest struct {
+	oldPassword string
+	newPassword string
+}
+
+func (h *Handler) UpdatePasswordHandler(w http.ResponseWriter, r *http.Request) {
+	// Parse the JSON request body
+	var updatePasswordRequest UpdatePasswordRequest
+	err := json.NewDecoder(r.Body).Decode(&updatePasswordRequest)
+	if err != nil {
+		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
+		return
+	}
+
+	// Access the old and new password from the parsed object
+	oldPassword := updatePasswordRequest.oldPassword
+	newPassword := updatePasswordRequest.newPassword
+
+	session, err := h.Store.Get(r, "session")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	userID := session.Values["id"]
+	if userID == nil {
+		http.Error(w, "Not logged in", http.StatusUnauthorized)
+		return
+	}
+
+	var user models.User
+	result := h.DB.First(&user, userID)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(user.PasswordSalt+oldPassword))
+	if err != nil {
+		http.Error(w, "Invalid password", http.StatusBadRequest)
+		return
+	}
+
+	salt, err := GenerateSalt()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	passwordHash, err := HashPassword(newPassword, salt)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	user.PasswordHash = passwordHash
+	user.PasswordSalt = salt
+
+	result = h.DB.Save(&user)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

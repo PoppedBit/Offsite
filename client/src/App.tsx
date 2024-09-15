@@ -1,7 +1,7 @@
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material';
-import { Login, Register } from './views';
+import { Account, Login, Register } from './views';
 import 'shared/styles/App.scss';
 import {
   setErrorMessage,
@@ -72,6 +72,7 @@ const App = () => {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/account" element={<Account />} />
           </Routes>
         </BrowserRouter>
         <Loading isVisible={isLoadingMessage !== null} message={isLoadingMessage ?? ''} />

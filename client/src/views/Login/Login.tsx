@@ -1,8 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { Button, TextField } from '@mui/material';
 
-import { PageHeader } from 'shared/components';
-import { LoginForm } from './styles';
+import { Form, PageHeader } from 'shared/components';
 import { useNavigate } from 'react-router-dom';
 import { useLogin } from './hooks';
 
@@ -22,7 +21,7 @@ const Login = () => {
   return (
     <>
       <PageHeader links={[]} text="Log In" />
-      <LoginForm onSubmit={handleSubmit(submitLogin)}>
+      <Form onSubmit={handleSubmit(submitLogin)}>
         <TextField
           label="Username or Email"
           fullWidth
@@ -45,7 +44,7 @@ const Login = () => {
         <Button onClick={() => navigate(`${import.meta.env.VITE_BASE_URL}/forgotPassword`)}>
           Forgot Password?
         </Button>
-      </LoginForm>
+      </Form>
     </>
   );
 };

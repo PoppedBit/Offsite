@@ -1,8 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { Button, TextField } from '@mui/material';
 
-import { PageHeader } from 'shared/components';
-import { RegisterForm } from './styles';
+import { Form, PageHeader } from 'shared/components';
 import { useNavigate } from 'react-router-dom';
 import { useRegister } from './hooks';
 
@@ -14,7 +13,7 @@ const Register = () => {
   return (
     <>
       <PageHeader links={[]} text="Register" />
-      <RegisterForm onSubmit={handleSubmit(handleSubmitRegister)}>
+      <Form onSubmit={handleSubmit(handleSubmitRegister)}>
         <TextField label="Username" fullWidth {...register('username', { required: true })} />
         <TextField
           label="Email"
@@ -40,7 +39,7 @@ const Register = () => {
         <Button onClick={() => navigate(`${import.meta.env.VITE_BASE_URL}/login`)}>
           Already have an account? Log in
         </Button>
-      </RegisterForm>
+      </Form>
     </>
   );
 };
