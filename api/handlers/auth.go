@@ -148,3 +148,61 @@ func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func (h *Handler) LogoutHandler(w http.ResponseWriter, r *http.Request) {
+	session, err := h.Store.Get(r, "session")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	session.Options.MaxAge = -1
+
+	err = session.Save(r, w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+type AccountSettings struct {
+	Username         string
+	OriginalUsername string
+	Email            string
+	EmailVerified    bool
+	NameColor        string
+}
+
+func (h *Handler) AccountSettingsHandler(w http.ResponseWriter, r *http.Request) {
+	session, err := h.Store.Get(r, "session")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	userID := session.Values["id"]
+	if userID == nil {
+		http.Error(w, "Not logged in", http.StatusUnauthorized)
+		return
+	}
+
+	var user models.User
+	result := h.DB.First(&user, userID)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	accountSettings := AccountSettings{
+		Username:         user.Username,
+		OriginalUsername: user.OriginalUsername,
+		Email:            user.Email,
+		EmailVerified:    user.EmailVerified,
+		NameColor:        user.NameColor,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(accountSettings)
+}
