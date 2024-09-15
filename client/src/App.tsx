@@ -1,6 +1,6 @@
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Container, Button, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { Account, Login, Register } from './views';
 import 'shared/styles/App.scss';
 import {
@@ -12,6 +12,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
 import { Dialog, Snackbars, Loading, } from 'shared/components';
+import { Home, Person, Settings } from '@mui/icons-material';
 
 // Define your custom theme
 // const theme = createTheme({
@@ -113,6 +114,13 @@ const App = () => {
           {confirmationMessage?.children}
         </Dialog>
       </Container>
+      <BottomNavigation
+        showLabels
+      >
+        <BottomNavigationAction label="Home" icon={<Home />} />
+        <BottomNavigationAction label="Profile" icon={<Person />} />
+        <BottomNavigationAction label="Settings" icon={<Settings />} />
+      </BottomNavigation>
     </ThemeProvider>
   );
 };
