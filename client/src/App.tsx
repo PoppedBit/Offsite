@@ -1,10 +1,17 @@
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Container } from '@mui/material';
-import { Login } from './views';
-import './styles/app.scss';
-
+import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material';
+import { Login, Register } from './views';
+import 'shared/styles/App.scss';
+import {
+  setErrorMessage,
+  setSuccessMessage,
+  setConfirmationMessage
+} from 'store/slices/notifications';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { TODO } from 'shared/types';
+import { Dialog, Snackbars, Loading, } from 'shared/components';
 
 // Define your custom theme
 // const theme = createTheme({
@@ -43,25 +50,68 @@ const theme = createTheme({
 // });
 
 
-
-
 const App = () => {
+
+  const dispatch = useDispatch();
+  const {
+    success: successMessage,
+    error: errorMessage,
+    confirmation: confirmationMessage,
+    isLoading: isLoadingMessage
+  } = useSelector((state: TODO) => state.notifications);
+
   return (
     <ThemeProvider theme={theme}>
-      <div>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6">Offsite</Typography>
-          </Toolbar>
-        </AppBar>
-        <Container>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-            </Routes>
-          </BrowserRouter>
-        </Container>
-      </div>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6">Offsite</Typography>
+        </Toolbar>
+      </AppBar>
+      <Container maxWidth="md" sx={{ paddingTop: '2rem' }}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
+        </BrowserRouter>
+        <Loading isVisible={isLoadingMessage !== null} message={isLoadingMessage ?? ''} />
+        <Snackbars
+          successMessage={successMessage}
+          setSuccessMessage={(message: string) => dispatch(setSuccessMessage(message))}
+          errorMessage={errorMessage}
+          setErrorMessage={(message: string) => dispatch(setErrorMessage(message))}
+        />
+        <Dialog
+          isOpen={confirmationMessage !== null}
+          onClose={() => {
+            dispatch(setConfirmationMessage(null));
+          }}
+          title={confirmationMessage?.title ?? 'Are you sure?'}
+          fullWidth={false}
+          buttons={
+            <>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  confirmationMessage?.onConfirm();
+                  dispatch(setConfirmationMessage(null));
+                }}
+              >
+                Submit
+              </Button>
+              <Button
+                onClick={() => {
+                  dispatch(setConfirmationMessage(null));
+                }}
+              >
+                Cancel
+              </Button>
+            </>
+          }
+        >
+          {confirmationMessage?.children}
+        </Dialog>
+      </Container>
     </ThemeProvider>
   );
 };

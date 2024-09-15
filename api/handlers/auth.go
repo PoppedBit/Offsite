@@ -3,6 +3,7 @@ package handlers
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/json"
 	"net/http"
 
 	"github.com/PoppedBit/OffSite/models"
@@ -29,11 +30,25 @@ func HashPassword(password, salt string) (string, error) {
 	return string(hashedPassword), nil
 }
 
-// RegisterHandler handles the registration of a new user
+type RegisterRequest struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
-	username := r.FormValue("username")
-	email := r.FormValue("email")
-	password := r.FormValue("password")
+	// Parse the JSON request body
+	var registerRequest RegisterRequest
+	err := json.NewDecoder(r.Body).Decode(&registerRequest)
+	if err != nil {
+		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
+		return
+	}
+
+	// Access the identifier and password from the parsed object
+	username := registerRequest.Username
+	email := registerRequest.Email
+	password := registerRequest.Password
 
 	// Ensure username is unique
 	user := models.User{}
@@ -44,10 +59,12 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Ensure email is unique
-	h.DB.Where("email = ?", email).First(&user)
-	if user.ID != 0 {
-		http.Error(w, "Email already taken", http.StatusBadRequest)
-		return
+	if len(email) != 0 {
+		h.DB.Where("email = ?", email).First(&user)
+		if user.ID != 0 {
+			http.Error(w, "Email already taken", http.StatusBadRequest)
+			return
+		}
 	}
 
 	// Hash the password
@@ -82,6 +99,52 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+type LoginRequest struct {
+	Identifier string `json:"identifier"`
+	Password   string `json:"password"`
+}
+
 func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
+	// Parse the JSON request body
+	var loginRequest LoginRequest
+	err := json.NewDecoder(r.Body).Decode(&loginRequest)
+	if err != nil {
+		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
+		return
+	}
+
+	// Access the identifier and password from the parsed object
+	identifier := loginRequest.Identifier
+	password := loginRequest.Password
+
+	var user models.User
+	result := h.DB.Where("username = ? OR email = ?", identifier, identifier).First(&user)
+	if result.Error != nil {
+		http.Error(w, "Invalid username or email", http.StatusBadRequest)
+		return
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(user.PasswordSalt+password))
+	if err != nil {
+		http.Error(w, "Invalid username or email", http.StatusBadRequest)
+		return
+	}
+
+	session, err := h.Store.Get(r, "session")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	session.Values["id"] = user.ID
+	session.Values["username"] = user.Username
+
+	err = session.Save(r, w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

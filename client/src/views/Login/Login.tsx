@@ -1,39 +1,52 @@
 import { useForm } from 'react-hook-form';
-import { Typography, } from '@mui/material';
-import { Container, Form, LoginButton, LoginLink, LoginTextField } from './styles';
+import { Button, TextField } from '@mui/material';
+
+import { PageHeader } from 'shared/components';
+import { LoginForm } from './styles';
+import { useNavigate } from 'react-router-dom';
+import { useLogin } from './hooks';
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
+  const { isSubmitting, handleSubmit: handleSubmitLogin } = useLogin();
 
-  const onSubmit = (data: any) => {
-    // Handle form submission logic here
+  const submitLogin = (data: any) => {
+    const { identifier, password } = data;
+    handleSubmitLogin({
+      identifier: identifier.trim(),
+      password
+    });
   };
 
   return (
-    <Container>
-      <Typography variant="h2">Welcome Back</Typography>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <LoginTextField
-          id="usernameOrEmail"
+    <>
+      <PageHeader links={[]} text="Log In" />
+      <LoginForm onSubmit={handleSubmit(submitLogin)}>
+        <TextField
           label="Username or Email"
-          type="text"
-          {...register('usernameOrEmail')}
+          fullWidth
+          {...register('identifier', { required: true })}
+          autoComplete="email"
         />
-        <LoginTextField
-          id="password"
+        <TextField
           label="Password"
           type="password"
-          {...register('password')}
+          fullWidth
+          {...register('password', { required: true })}
+          autoComplete="current-password"
         />
-        <div>
-          <LoginLink href="/forgot">Forgot Password</LoginLink>
-        </div>
-        <LoginButton type="submit" variant="contained">Sign In</LoginButton>
-      </Form>
-      <Typography>
-        Don't have an account? <LoginLink href="/register">Register</LoginLink>
-      </Typography>
-    </Container>
+        <Button variant="contained" type="submit" disabled={isSubmitting}>
+          Log In
+        </Button>
+        <Button onClick={() => navigate(`${import.meta.env.VITE_BASE_URL}/register`)}>
+          Don't have an account? Register
+        </Button>
+        <Button onClick={() => navigate(`${import.meta.env.VITE_BASE_URL}/forgotPassword`)}>
+          Forgot Password?
+        </Button>
+      </LoginForm>
+    </>
   );
 };
 
