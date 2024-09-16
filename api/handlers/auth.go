@@ -82,6 +82,14 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	isAdmin := false
+	// If this is the first user, make them an admin
+	var users []models.User
+	h.DB.Find(&users)
+	if len(users) == 0 {
+		isAdmin = true
+	}
+
 	// Create the user
 	user = models.User{
 		Username:         username,
@@ -90,6 +98,7 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		EmailVerified:    false,
 		PasswordHash:     passwordHash,
 		PasswordSalt:     salt,
+		IsAdmin:          isAdmin,
 	}
 
 	result := h.DB.Create(&user)

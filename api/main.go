@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"log"
 	"net/http"
 	"os"
@@ -38,7 +37,7 @@ func main() {
 
 	// Router
 	router := mux.NewRouter()
-	router.Use(InjectAuthStatus(cookieStore))
+	// router.Use(InjectAuthStatus(cookieStore))
 	routes.RegisterRoutes(router, handler)
 	http.Handle("/", router)
 
@@ -49,22 +48,22 @@ func main() {
 }
 
 // Middleware to inject authentication status response context
-func InjectAuthStatus(store *sessions.CookieStore) func(http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			session, _ := store.Get(r, "session")
+// func InjectAuthStatus(store *sessions.CookieStore) func(http.Handler) http.Handler {
+// 	return func(next http.Handler) http.Handler {
+// 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 			session, _ := store.Get(r, "session")
 
-			isAuthenticated := session.Values["id"] != nil
-			ctx := context.WithValue(r.Context(), "isAuthenticated", isAuthenticated)
+// 			isAuthenticated := session.Values["id"] != nil
+// 			ctx := context.WithValue(r.Context(), "isAuthenticated", isAuthenticated)
 
-			if isAuthenticated {
-				userId := session.Values["id"]
-				userEmail := session.Values["username"]
-				ctx = context.WithValue(ctx, "id", userId)
-				ctx = context.WithValue(ctx, "username", userEmail)
-			}
+// 			if isAuthenticated {
+// 				userId := session.Values["id"]
+// 				userEmail := session.Values["username"]
+// 				ctx = context.WithValue(ctx, "id", userId)
+// 				ctx = context.WithValue(ctx, "username", userEmail)
+// 			}
 
-			next.ServeHTTP(w, r.WithContext(ctx))
-		})
-	}
-}
+// 			next.ServeHTTP(w, r.WithContext(ctx))
+// 		})
+// 	}
+// }

@@ -42,10 +42,11 @@ const App = () => {
   } = useSelector((state: TODO) => state.notifications);
 
   useEffect(() => {
-    handleCheckSession();
-  }, []);
-
-  console.log('user', user);
+    console.log(user);
+    if(!user.id){
+      handleCheckSession();
+    }
+  }, [user]);
 
   const isAuthenticated = Boolean(user.id);
 
@@ -60,7 +61,6 @@ const App = () => {
 
   if (isAuthenticated) {
     bottomNavigationItems.push(
-      <BottomNavigationAction key="profile" label="Profile" icon={<Person />} component={Link} to={`/@${user.username}`} />,
       <BottomNavigationAction key="account" label="Settings" icon={<Settings />} component={Link} to="/account" />,
       <BottomNavigationAction key="logout" label="Logout" icon={<Logout />} component={Link} to="/logout" />
     );
@@ -76,7 +76,14 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6">Offsite</Typography>
+            <Typography variant="h6">
+              <Link to="/">Offsite</Link>
+            </Typography>
+            {isAuthenticated && <Link
+              to={`/@${user.username}`}
+            >
+              {user.username}
+            </Link>}
           </Toolbar>
         </AppBar>
         <Container maxWidth="md" sx={{ paddingTop: '2rem' }}>

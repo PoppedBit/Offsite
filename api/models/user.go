@@ -16,6 +16,9 @@ type User struct {
 	LastLoginUTC     int64
 	LastActiveUTC    int64
 
+	// Roles
+	IsAdmin bool
+
 	// Ban
 	IsBanned  bool
 	UnBanUTC  int64
