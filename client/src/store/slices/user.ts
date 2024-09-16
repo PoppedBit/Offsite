@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  user: undefined,
-  navigation: undefined
+  id: null,
+  username: null,
 };
 
 const userSlice = createSlice({
@@ -10,26 +10,19 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload;
-      state.navigation = undefined;
-    },
-    updateUser: (state, action) => {
-      state.user = {
-        // @ts-ignore
-        ...state.user,
+      return {
+        ...state,
         ...action.payload
       };
     },
     clearUser: (state) => {
-      state.user = undefined;
-      state.navigation = undefined;
+      state = {
+        ...initialState
+      };
     },
-    setNavigation: (state, action) => {
-      state.navigation = action.payload;
-    }
   }
 });
 
-export const { setUser, clearUser, setNavigation, updateUser } = userSlice.actions;
+export const { setUser, clearUser } = userSlice.actions;
 
 export default userSlice.reducer;

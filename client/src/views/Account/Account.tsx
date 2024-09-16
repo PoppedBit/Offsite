@@ -5,7 +5,6 @@ import { CirclePicker } from "react-color";
 
 
 const Account = () => {
-
   const { 
     register: registerUsername, 
     handleSubmit: handleSubmitUsername,

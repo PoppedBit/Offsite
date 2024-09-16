@@ -151,6 +151,23 @@ func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func (h *Handler) CheckSessionHandler(w http.ResponseWriter, r *http.Request) {
+	session, err := h.Store.Get(r, "session")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	userID := session.Values["id"]
+	username := session.Values["username"]
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"id":       userID,
+		"username": username,
+	})
+}
+
 func (h *Handler) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := h.Store.Get(r, "session")
 	if err != nil {

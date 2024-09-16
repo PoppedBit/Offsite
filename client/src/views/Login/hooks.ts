@@ -1,4 +1,4 @@
-import { requestLogin } from './api';
+import { requestCheckSession, requestLogin } from './api';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +30,39 @@ export const useLogin = () => {
     } catch (e) {
       console.log(e);
       dispatch(setErrorMessage('An unexpected error occured'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return {
+    isSubmitting,
+    handleSubmit
+  };
+};
+
+export const useCheckSession = () => {
+  const dispatch = useDispatch();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+
+    try {
+      const response = await requestCheckSession();
+
+      if (response.status === 200) {
+        const data = await response.json();
+        dispatch(setUser(data));
+      } else {
+        const error = await response.text();
+        dispatch(setErrorMessage(error));
+        dispatch(setUser(null));
+      }
+    } catch (e) {
+      console.log(e);
+      dispatch(setErrorMessage('An unexpected error occured'));
+      dispatch(setUser(null));
     } finally {
       setIsSubmitting(false);
     }

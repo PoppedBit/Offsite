@@ -1,4 +1,4 @@
-import { baseUrl, getPostConfig } from 'shared/api';
+import { baseUrl, getPostConfig, getRequestConfig } from 'shared/api';
 
 export const requestLogin = async (identifier: string, password: string) => {
   const data = {
@@ -7,4 +7,9 @@ export const requestLogin = async (identifier: string, password: string) => {
   };
   const postConfig = getPostConfig(data);
   return await fetch(`${baseUrl}/login`, postConfig);
+};
+
+export const requestCheckSession = async () => {
+  const config = getRequestConfig();
+  return await fetch(`${baseUrl}/check-session`, config);
 };
