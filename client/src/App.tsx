@@ -1,6 +1,6 @@
 
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
-import { Container, Button, BottomNavigation, BottomNavigationAction } from '@mui/material';
+import { Container, Button, BottomNavigation, BottomNavigationAction, Typography } from '@mui/material';
 import { Login, Profile, Register, Settings } from './views';
 import 'shared/styles/App.scss';
 import {
@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
 import { Dialog, Snackbars, Loading, Header, } from 'shared/components';
 import { Home, Login as LoginIcon, Logout, PersonAdd, Settings as SettingsIcon } from '@mui/icons-material';
-import { useCheckSession } from 'views/Login/hooks';
+import { useCheckSession, useLogout } from 'views/Login/hooks';
 import { useEffect } from 'react';
 
 // Seahawk theme
@@ -32,6 +32,7 @@ const App = () => {
 
   const dispatch = useDispatch();
   const { handleSubmit: handleCheckSession } = useCheckSession();
+  const { handleClick: handleClickLogout, } = useLogout();
 
   const user = useSelector((state: TODO) => state.user);
   const {
@@ -61,7 +62,7 @@ const App = () => {
   if (isAuthenticated) {
     bottomNavigationItems.push(
       <BottomNavigationAction key="settings" label="Settings" icon={<SettingsIcon />} component={Link} to="/settings" />,
-      <BottomNavigationAction key="logout" label="Logout" icon={<Logout />} component={Link} to="/logout" />
+      <BottomNavigationAction key="logout" label="Logout" icon={<Logout />} component={Typography} onClick={handleClickLogout} />
     );
   } else {
     bottomNavigationItems.push(

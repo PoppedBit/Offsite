@@ -13,3 +13,8 @@ export const requestCheckSession = async () => {
   const config = getRequestConfig();
   return await fetch(`${baseUrl}/check-session`, config);
 };
+
+export const requestLogout = async () => {
+  const config = getRequestConfig();
+  return await fetch(`${baseUrl}/logout`, config);
+};

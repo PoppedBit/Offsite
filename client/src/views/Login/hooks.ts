@@ -1,8 +1,8 @@
-import { requestCheckSession, requestLogin } from './api';
+import { requestCheckSession, requestLogin, requestLogout } from './api';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setErrorMessage } from 'store/slices/notifications';
+import { setConfirmationMessage, setErrorMessage } from 'store/slices/notifications';
 import { setUser } from 'store/slices/user';
 import { TODO } from 'shared/types';
 
@@ -73,3 +73,36 @@ export const useCheckSession = () => {
     handleSubmit
   };
 };
+
+export const useLogout = () => {
+  const dispatch = useDispatch();
+
+  const handleClick = () => {
+    dispatch(setConfirmationMessage({
+      title: 'Are you sure you want to logout?',
+      onConfirm: handleSubmit
+    }));
+  }
+
+  const handleSubmit = async () => {
+    try {
+      const response = await requestLogout();
+
+      if (response.status === 200) {
+        dispatch(setUser(null));
+        window.location.href = window.location.href;
+      } else {
+        const error = await response.text();
+        dispatch(setErrorMessage(error));
+      }
+    } catch (e) {
+      console.log(e);
+      dispatch(setErrorMessage('An unexpected error occured'));
+    }
+  }
+    
+    
+  return {
+    handleClick,
+  };
+}

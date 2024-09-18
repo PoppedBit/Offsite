@@ -10,6 +10,13 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var DisallowedUsernames = []string{
+	"login",
+	"register",
+	"logout",
+	"settings",
+}
+
 // GenerateSalt creates a new salt for password hashing
 func GenerateSalt() (string, error) {
 	salt := make([]byte, 16)
@@ -51,14 +58,7 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	password := registerRequest.Password
 
 	// Disallowed usernames,
-	// if username is in this list, return an error
-	disallowedUsernames := []string{
-		"login",
-		"register",
-		"logout",
-		"settings",
-	}
-	for _, disallowedUsername := range disallowedUsernames {
+	for _, disallowedUsername := range DisallowedUsernames {
 		if username == disallowedUsername {
 			http.Error(w, "Invalid username", http.StatusBadRequest)
 			return
@@ -267,8 +267,8 @@ func (h *Handler) AccountSettingsHandler(w http.ResponseWriter, r *http.Request)
 }
 
 type UpdatePasswordRequest struct {
-	oldPassword string
-	newPassword string
+	OldPassword string
+	NewPassword string
 }
 
 func (h *Handler) UpdatePasswordHandler(w http.ResponseWriter, r *http.Request) {
@@ -281,8 +281,8 @@ func (h *Handler) UpdatePasswordHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	// Access the old and new password from the parsed object
-	oldPassword := updatePasswordRequest.oldPassword
-	newPassword := updatePasswordRequest.newPassword
+	oldPassword := updatePasswordRequest.OldPassword
+	newPassword := updatePasswordRequest.NewPassword
 
 	session, err := h.Store.Get(r, "session")
 	if err != nil {
