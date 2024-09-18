@@ -1,8 +1,7 @@
-import { Avatar, Grid, Toolbar, Typography } from '@mui/material';
+import { Avatar, Grid, Toolbar } from '@mui/material';
 import { AccountLink, AccountLinkText, MainGrid, MainTypopgraphy, RightGrid, SiteTitleLink, StyledAppBar } from './styles';
 import { useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
-import { Link } from 'react-router-dom';
 import { AccountCircle } from '@mui/icons-material';
 
 
@@ -23,7 +22,7 @@ const Header = () => {
           </MainGrid>
           <RightGrid item xs={2}>  
             {isAuthenticated && (
-              <AccountLink to={`/@${username}`}>
+              <AccountLink to={`/${username}`}>
                 <Avatar>
                   <AccountCircle />
                 </Avatar>

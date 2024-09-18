@@ -4,7 +4,7 @@ import { Button, TextField, Typography } from "@mui/material";
 import { CirclePicker } from "react-color";
 
 
-const Account = () => {
+const Settings = () => {
   const { 
     register: registerUsername, 
     handleSubmit: handleSubmitUsername,
@@ -22,7 +22,7 @@ const Account = () => {
 
   return (
     <>
-      <PageHeader text="Account" links={[]} />
+      <PageHeader text="Settings" links={[]} />
       <Form onSubmit={handleSubmitUsername(onSubmitUsername)}>
         <Typography>
           Your original username will always stay reserved for you: {"TODO: ORIGINAL USERNAME"}
@@ -78,4 +78,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default Settings;

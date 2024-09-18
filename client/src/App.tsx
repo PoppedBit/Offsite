@@ -1,7 +1,7 @@
 
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Container, Button, BottomNavigation, BottomNavigationAction } from '@mui/material';
-import { Account, Login, Register } from './views';
+import { Container, Button, BottomNavigation, BottomNavigationAction } from '@mui/material';
+import { Login, Profile, Register, Settings } from './views';
 import 'shared/styles/App.scss';
 import {
   setErrorMessage,
@@ -12,7 +12,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
 import { Dialog, Snackbars, Loading, Header, } from 'shared/components';
-import { Home, Login as LoginIcon, Logout, Person, PersonAdd, Settings } from '@mui/icons-material';
+import { Home, Login as LoginIcon, Logout, PersonAdd, Settings as SettingsIcon } from '@mui/icons-material';
 import { useCheckSession } from 'views/Login/hooks';
 import { useEffect } from 'react';
 
@@ -60,7 +60,7 @@ const App = () => {
 
   if (isAuthenticated) {
     bottomNavigationItems.push(
-      <BottomNavigationAction key="account" label="Settings" icon={<Settings />} component={Link} to="/account" />,
+      <BottomNavigationAction key="settings" label="Settings" icon={<SettingsIcon />} component={Link} to="/settings" />,
       <BottomNavigationAction key="logout" label="Logout" icon={<Logout />} component={Link} to="/logout" />
     );
   } else {
@@ -74,11 +74,13 @@ const App = () => {
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <Header />
-        <Container maxWidth="md" sx={{ paddingTop: '2rem' }}>
+        <Container maxWidth="md" sx={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/account" element={<Account />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/:username" element={<Profile />} />
+            <Route path="/" element={<div>Home</div>} />
           </Routes>
           <Loading isVisible={isLoadingMessage !== null} message={isLoadingMessage ?? ''} />
           <Snackbars
@@ -118,7 +120,16 @@ const App = () => {
             {confirmationMessage?.children}
           </Dialog>
         </Container>
-        <BottomNavigation showLabels>
+        <BottomNavigation
+          showLabels
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+          }}
+        >
           {bottomNavigationItems}
         </BottomNavigation>
       </ThemeProvider>

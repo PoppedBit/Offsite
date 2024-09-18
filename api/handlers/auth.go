@@ -50,6 +50,21 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	email := registerRequest.Email
 	password := registerRequest.Password
 
+	// Disallowed usernames,
+	// if username is in this list, return an error
+	disallowedUsernames := []string{
+		"login",
+		"register",
+		"logout",
+		"settings",
+	}
+	for _, disallowedUsername := range disallowedUsernames {
+		if username == disallowedUsername {
+			http.Error(w, "Invalid username", http.StatusBadRequest)
+			return
+		}
+	}
+
 	// Ensure username is unique
 	user := models.User{}
 	h.DB.Where("username = ?", username).First(&user)
