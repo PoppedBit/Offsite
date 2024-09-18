@@ -149,7 +149,6 @@ func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	session.Values["id"] = user.ID
-	session.Values["username"] = user.Username
 
 	err = session.Save(r, w)
 	if err != nil {
@@ -168,12 +167,29 @@ func (h *Handler) CheckSessionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userID := session.Values["id"]
-	username := session.Values["username"]
+	username := ""
+	isAdmin := false
+
+	if userID != nil {
+		var user models.User
+		result := h.DB.First(&user, userID)
+
+		// TODO - Invalidate session since user doesn't exist
+
+		if result.Error != nil {
+			http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		username = user.Username
+		isAdmin = user.IsAdmin
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"id":       userID,
 		"username": username,
+		"isAdmin":  isAdmin,
 	})
 }
 

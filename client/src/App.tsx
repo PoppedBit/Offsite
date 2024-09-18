@@ -11,7 +11,7 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
-import { Dialog, Snackbars, Loading, } from 'shared/components';
+import { Dialog, Snackbars, Loading, Header, } from 'shared/components';
 import { Home, Login as LoginIcon, Logout, Person, PersonAdd, Settings } from '@mui/icons-material';
 import { useCheckSession } from 'views/Login/hooks';
 import { useEffect } from 'react';
@@ -42,7 +42,6 @@ const App = () => {
   } = useSelector((state: TODO) => state.notifications);
 
   useEffect(() => {
-    console.log(user);
     if(!user.id){
       handleCheckSession();
     }
@@ -74,18 +73,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6">
-              <Link to="/">Offsite</Link>
-            </Typography>
-            {isAuthenticated && <Link
-              to={`/@${user.username}`}
-            >
-              {user.username}
-            </Link>}
-          </Toolbar>
-        </AppBar>
+        <Header />
         <Container maxWidth="md" sx={{ paddingTop: '2rem' }}>
           <Routes>
             <Route path="/login" element={<Login />} />

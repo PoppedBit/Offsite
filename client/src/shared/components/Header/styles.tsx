@@ -1,11 +1,8 @@
-import { AppBar, Drawer, Grid, List, Typography } from '@mui/material';
+import { AppBar, Grid, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
-import { primaryColor } from 'shared/styles/colors';
-import { Close } from '@mui/icons-material';
 
 export const StyledAppBar = styled(AppBar)({
-  backgroundColor: primaryColor,
   boxShadow: 'none',
   height: '64px',
   lineHeight: '64px'
@@ -17,7 +14,7 @@ export const SiteTitleLink = styled(Link)({
 });
 
 export const MainGrid = styled(Grid)({
-  textAlign: 'center'
+  // textAlign: 'center'
 });
 
 export const MainTypopgraphy = styled(Typography)({
@@ -26,35 +23,18 @@ export const MainTypopgraphy = styled(Typography)({
 });
 
 export const RightGrid = styled(Grid)({
-  textAlign: 'right'
-});
-
-export const NavDrawer = styled(Drawer)({});
-
-export const NavDrawerHeader = styled('div')({
-  height: '64px',
-  backgroundColor: primaryColor,
-  color: '#FFFFFF',
   textAlign: 'right',
-  cursor: 'pointer',
-  display: 'grid',
+  display: 'flex',
   alignItems: 'center',
-  justifyItems: 'end',
-  padding: '10px 15px'
+  justifyContent: 'flex-end'
 });
 
-export const NavDrawerCloseIcon = styled(Close)({
-  float: 'right'
+export const AccountLink = styled(Link)({
+  display: 'flex',
+  alignItems: 'center',
+  textDecoration: 'none'
 });
 
-export const NavDrawerContent = styled('div')({
-  width: '250px',
-  position: 'relative',
-  height: '100vh'
-});
-
-export const NavDrawerActions = styled(List)({
-  position: 'absolute',
-  bottom: 0,
-  width: '250px'
+export const AccountLinkText = styled(Typography)({
+  marginLeft: '8px'
 });
