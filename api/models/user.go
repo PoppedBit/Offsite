@@ -25,5 +25,5 @@ type User struct {
 	BanReason string
 
 	// Personalization
-	NameColor string `gorm:"type:varchar(6);default:FF69B4"`
+	NameColor string `gorm:"type:varchar(6);default:#FF69B4"`
 }

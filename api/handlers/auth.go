@@ -226,14 +226,6 @@ func (h *Handler) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-type AccountSettings struct {
-	Username         string
-	OriginalUsername string
-	Email            string
-	EmailVerified    bool
-	NameColor        string
-}
-
 func (h *Handler) AccountSettingsHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := h.Store.Get(r, "session")
 	if err != nil {
@@ -254,16 +246,14 @@ func (h *Handler) AccountSettingsHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	accountSettings := AccountSettings{
-		Username:         user.Username,
-		OriginalUsername: user.OriginalUsername,
-		Email:            user.Email,
-		EmailVerified:    user.EmailVerified,
-		NameColor:        user.NameColor,
-	}
-
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(accountSettings)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"username":         user.Username,
+		"originalUsername": user.OriginalUsername,
+		"email":            user.Email,
+		"emailVerified":    user.EmailVerified,
+		"nameColor":        user.NameColor,
+	})
 }
 
 type UpdatePasswordRequest struct {

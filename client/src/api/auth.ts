@@ -32,5 +32,5 @@ export const requestRegister = async (data: RequestRegister) => {
 
 export const requestAccount = async () => {
   const config = getRequestConfig();
-  return await fetch(`${baseUrl}/account-settings`, config);
+  return await fetch(`${baseUrl}/account`, config);
 };

@@ -1,4 +1,4 @@
-import { requestCheckSession, requestLogin, requestLogout, requestRegister } from 'api';
+import { requestAccount, requestCheckSession, requestLogin, requestLogout, requestRegister } from 'api';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -184,3 +184,118 @@ export const useRegister = () => {
     handleSubmit
   };
 };
+
+
+export const useAccountSettings = () => {
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<'username'|'password'|false>(false);
+
+  const handleGetSettings = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await requestAccount();
+
+      if (response.status === 200) {
+        const data = await response.json();
+        dispatch(setUser(data));
+      } else {
+        const error = await response.text();
+        dispatch(setErrorMessage(error));
+      }
+    } catch (e) {
+      console.log(e);
+      dispatch(setErrorMessage('An unexpected error occured'));
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handleSubmitUsername = async (data: TODO) => {
+    setIsSubmitting('username');
+
+    const { username, nameColor } = data;
+
+    // Check username meets requirements
+    // ensures that the string starts with an alphanumeric character
+    const usernameRegex: RegExp = /^[a-zA-Z0-9](?!.*[.-]{2})[a-zA-Z0-9.-]{1,28}[a-zA-Z0-9]$/;
+    if (!usernameRegex.test(username)) {
+      dispatch(setErrorMessage('Invalid Username'));
+      return;
+    }
+
+    try {
+      const response = await requestUpdateUsername({
+        username,
+        nameColor,
+      });
+
+      if (response.status === 200) {
+        dispatch(setSuccessMessage('Username updated'));
+      } else {
+        const error = await response.text();
+        dispatch(setErrorMessage(error));
+      }
+    } catch (e) {
+      console.log(e);
+      dispatch(setErrorMessage('An unexpected error occured'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSubmitPassword = async (data: TODO) => {
+    setIsSubmitting('password');
+
+    const { oldPassword, newPassword, confirmPassword } = data;
+
+    // Password meets requirements
+    // 8 or more characters
+    // 1 letter
+    // 1 number
+    // 1 special character
+    const passwordRegex: RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*\W).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      dispatch(
+        setErrorMessage(
+          'Password must have at least 8 characters, with at least 1 letter, number, and special character'
+        )
+      );
+      return;
+    }
+
+    // Check passwords match
+    if (newPassword !== confirmPassword) {
+      dispatch(setErrorMessage('Passwords do not match'));
+      return;
+    }
+
+    try {
+      const response = await requestUpdatePassword({
+        oldPassword,
+        newPassword,
+      });
+
+      if (response.status === 200) {
+        dispatch(setSuccessMessage('Password updated'));
+      } else {
+        const error = await response.text();
+        dispatch(setErrorMessage(error));
+      }
+    } catch (e) {
+      console.log(e);
+      dispatch(setErrorMessage('An unexpected error occured'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return {
+    isLoading,
+    handleGetSettings,
+    isSubmitting,
+    handleSubmitUsername,
+    handleSubmitPassword
+  };
+}
