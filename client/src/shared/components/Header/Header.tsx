@@ -1,9 +1,16 @@
 import { Avatar, Grid, Toolbar } from '@mui/material';
-import { AccountLink, AccountLinkText, MainGrid, MainTypopgraphy, RightGrid, SiteTitleLink, StyledAppBar } from './styles';
+import {
+  AccountLink,
+  AccountLinkText,
+  MainGrid,
+  MainTypopgraphy,
+  RightGrid,
+  SiteTitleLink,
+  StyledAppBar
+} from './styles';
 import { useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
 import { AccountCircle } from '@mui/icons-material';
-
 
 const Header = () => {
   const user = useSelector((state: TODO) => state.user);
@@ -20,15 +27,13 @@ const Header = () => {
               <SiteTitleLink to="/">{import.meta.env.VITE_TITLE}</SiteTitleLink>
             </MainTypopgraphy>
           </MainGrid>
-          <RightGrid item xs={2}>  
+          <RightGrid item xs={2}>
             {isAuthenticated && (
               <AccountLink to={`/${username}`}>
                 <Avatar>
                   <AccountCircle />
                 </Avatar>
-                <AccountLinkText variant="body1">
-                  {username}
-                </AccountLinkText>
+                <AccountLinkText variant="body1">{username}</AccountLinkText>
               </AccountLink>
             )}
           </RightGrid>

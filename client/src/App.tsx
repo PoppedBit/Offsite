@@ -1,6 +1,11 @@
-
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
-import { Container, Button, BottomNavigation, BottomNavigationAction, Typography } from '@mui/material';
+import {
+  Container,
+  Button,
+  BottomNavigation,
+  BottomNavigationAction,
+  Typography
+} from '@mui/material';
 import { Login, Profile, Register, Settings } from './views';
 import 'shared/styles/App.scss';
 import {
@@ -11,8 +16,14 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
-import { Dialog, Snackbars, Loading, Header, } from 'shared/components';
-import { Home, Login as LoginIcon, Logout, PersonAdd, Settings as SettingsIcon } from '@mui/icons-material';
+import { Dialog, Snackbars, Loading, Header } from 'shared/components';
+import {
+  Home,
+  Login as LoginIcon,
+  Logout,
+  PersonAdd,
+  Settings as SettingsIcon
+} from '@mui/icons-material';
 import { useCheckSession, useLogout } from 'hooks';
 import { useEffect } from 'react';
 
@@ -20,19 +31,18 @@ import { useEffect } from 'react';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#002d72',
+      main: '#002d72'
     },
     secondary: {
-      main: '#0072ce',
-    },
-  },
+      main: '#0072ce'
+    }
+  }
 });
 
 const App = () => {
-
   const dispatch = useDispatch();
   const { handleSubmit: handleCheckSession } = useCheckSession();
-  const { handleClick: handleClickLogout, } = useLogout();
+  const { handleClick: handleClickLogout } = useLogout();
 
   const user = useSelector((state: TODO) => state.user);
   const {
@@ -43,7 +53,7 @@ const App = () => {
   } = useSelector((state: TODO) => state.notifications);
 
   useEffect(() => {
-    if(!user.id){
+    if (!user.id) {
       handleCheckSession();
     }
   }, [user]);
@@ -51,23 +61,42 @@ const App = () => {
   const isAuthenticated = Boolean(user.id);
 
   let bottomNavigationItems = [
-    <BottomNavigationAction 
-      key='home'
-      label="Home" 
-      icon={<Home />} 
-      component={Link} 
-      to="/" />
+    <BottomNavigationAction key="home" label="Home" icon={<Home />} component={Link} to="/" />
   ];
 
   if (isAuthenticated) {
     bottomNavigationItems.push(
-      <BottomNavigationAction key="settings" label="Settings" icon={<SettingsIcon />} component={Link} to="/settings" />,
-      <BottomNavigationAction key="logout" label="Logout" icon={<Logout />} component={Typography} onClick={handleClickLogout} />
+      <BottomNavigationAction
+        key="settings"
+        label="Settings"
+        icon={<SettingsIcon />}
+        component={Link}
+        to="/settings"
+      />,
+      <BottomNavigationAction
+        key="logout"
+        label="Logout"
+        icon={<Logout />}
+        component={Typography}
+        onClick={handleClickLogout}
+      />
     );
   } else {
     bottomNavigationItems.push(
-      <BottomNavigationAction key="login" label="Login" icon={<LoginIcon />} component={Link} to="/login" />,
-      <BottomNavigationAction key="register" label="Register" icon={<PersonAdd />} component={Link} to="/register" />
+      <BottomNavigationAction
+        key="login"
+        label="Login"
+        icon={<LoginIcon />}
+        component={Link}
+        to="/login"
+      />,
+      <BottomNavigationAction
+        key="register"
+        label="Register"
+        icon={<PersonAdd />}
+        component={Link}
+        to="/register"
+      />
     );
   }
 
@@ -128,7 +157,7 @@ const App = () => {
             bottom: 0,
             left: 0,
             right: 0,
-            zIndex: 1000,
+            zIndex: 1000
           }}
         >
           {bottomNavigationItems}

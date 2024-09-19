@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   id: null,
-  username: '',
+  username: ''
 };
 
 const userSlice = createSlice({
@@ -19,7 +19,7 @@ const userSlice = createSlice({
       state = {
         ...initialState
       };
-    },
+    }
   }
 });
 

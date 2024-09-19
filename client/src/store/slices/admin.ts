@@ -15,7 +15,7 @@ const initialState: AdminState = {
   blackListedEmails: undefined,
   navigation: undefined,
   bugReports: undefined,
-  secrets: undefined,
+  secrets: undefined
 };
 
 const adminSlice = createSlice({
@@ -35,12 +35,12 @@ const adminSlice = createSlice({
       state.bugReports = action.payload;
     },
     addNavigation: (state, action) => {
-      state.navigation = [...state.navigation as Navigation[], action.payload];
+      state.navigation = [...(state.navigation as Navigation[]), action.payload];
     },
     updateNavigation: (state, action) => {
       const { id, data } = action.payload;
 
-      let newNavigation = [...state.navigation as Navigation[]];
+      let newNavigation = [...(state.navigation as Navigation[])];
       const index = newNavigation.findIndex((navigation: Navigation) => navigation.id === id);
 
       newNavigation[index] = {
@@ -59,7 +59,7 @@ const adminSlice = createSlice({
     updateBugReport: (state, action) => {
       const { id, data } = action.payload;
 
-      let newBugReports = [...state.bugReports as BugReport[]];
+      let newBugReports = [...(state.bugReports as BugReport[])];
       const index = newBugReports.findIndex((bugReport: BugReport) => bugReport.id === id);
 
       newBugReports[index] = {
@@ -73,7 +73,7 @@ const adminSlice = createSlice({
       state.secrets = action.payload;
     },
     addSecret: (state, action) => {
-      state.secrets = [...state.secrets as Secret[], action.payload];
+      state.secrets = [...(state.secrets as Secret[]), action.payload];
     },
     removeSecret: (state, action) => {
       const name = action.payload;
@@ -94,7 +94,7 @@ export const {
   updateBugReport,
   setSecrets,
   addSecret,
-  removeSecret,
+  removeSecret
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

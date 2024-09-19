@@ -1,8 +1,18 @@
-import { requestAccount, requestCheckSession, requestLogin, requestLogout, requestRegister } from 'api';
+import {
+  requestAccount,
+  requestCheckSession,
+  requestLogin,
+  requestLogout,
+  requestRegister
+} from 'api';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setConfirmationMessage, setErrorMessage, setSuccessMessage } from 'store/slices/notifications';
+import {
+  setConfirmationMessage,
+  setErrorMessage,
+  setSuccessMessage
+} from 'store/slices/notifications';
 import { setUser } from 'store/slices/user';
 import { TODO } from 'shared/types';
 
@@ -78,11 +88,13 @@ export const useLogout = () => {
   const dispatch = useDispatch();
 
   const handleClick = () => {
-    dispatch(setConfirmationMessage({
-      title: 'Are you sure you want to logout?',
-      onConfirm: handleSubmit
-    }));
-  }
+    dispatch(
+      setConfirmationMessage({
+        title: 'Are you sure you want to logout?',
+        onConfirm: handleSubmit
+      })
+    );
+  };
 
   const handleSubmit = async () => {
     try {
@@ -99,12 +111,12 @@ export const useLogout = () => {
       console.log(e);
       dispatch(setErrorMessage('An unexpected error occured'));
     }
-  }
-    
-  return {
-    handleClick,
   };
-}
+
+  return {
+    handleClick
+  };
+};
 
 export const useRegister = () => {
   const dispatch = useDispatch();
@@ -114,12 +126,7 @@ export const useRegister = () => {
   const handleSubmit = async (data: TODO) => {
     setIsSubmitting(true);
 
-    const {
-      username,
-      email,
-      password,
-      confirmPassword,
-    } = data;
+    const { username, email, password, confirmPassword } = data;
 
     // Email formatted correctly
     const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -161,7 +168,7 @@ export const useRegister = () => {
       const response = await requestRegister({
         username,
         email,
-        password,
+        password
       });
 
       if (response.status === 201) {
@@ -185,11 +192,10 @@ export const useRegister = () => {
   };
 };
 
-
 export const useAccountSettings = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSubmitting, setIsSubmitting] = useState<'username'|'password'|false>(false);
+  const [isSubmitting, setIsSubmitting] = useState<'username' | 'password' | false>(false);
 
   const handleGetSettings = async () => {
     setIsLoading(true);
@@ -210,7 +216,7 @@ export const useAccountSettings = () => {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const handleSubmitUsername = async (data: TODO) => {
     setIsSubmitting('username');
@@ -228,7 +234,7 @@ export const useAccountSettings = () => {
     try {
       const response = await requestUpdateUsername({
         username,
-        nameColor,
+        nameColor
       });
 
       if (response.status === 200) {
@@ -274,7 +280,7 @@ export const useAccountSettings = () => {
     try {
       const response = await requestUpdatePassword({
         oldPassword,
-        newPassword,
+        newPassword
       });
 
       if (response.status === 200) {
@@ -298,4 +304,4 @@ export const useAccountSettings = () => {
     handleSubmitUsername,
     handleSubmitPassword
   };
-}
+};

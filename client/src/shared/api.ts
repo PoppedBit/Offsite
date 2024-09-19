@@ -1,4 +1,3 @@
-
 export const baseUrl = import.meta.env.VITE_API_URL;
 
 export const getRequestConfig = () => {
@@ -8,7 +7,7 @@ export const getRequestConfig = () => {
     credentials: 'include',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     }
   };
 
@@ -21,7 +20,7 @@ export const getPostConfig = (data: any) => {
     mode: 'cors',
     credentials: 'include',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
   };
@@ -36,7 +35,7 @@ export const getDeleteConfig = (data: any) => {
     credentials: 'include',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
   };
@@ -45,11 +44,11 @@ export const getDeleteConfig = (data: any) => {
 };
 
 export const getPatchConfig = (data: any) => {
-const config = {
+  const config = {
     method: 'PATCH',
     credentials: 'include',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
   };
