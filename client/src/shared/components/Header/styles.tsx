@@ -32,9 +32,13 @@ export const RightGrid = styled(Grid)({
 export const AccountLink = styled(Link)({
   display: 'flex',
   alignItems: 'center',
-  textDecoration: 'none'
+  textDecoration: 'none',
+  color: 'inherit',
+  textDecorationColor: 'none'
 });
 
 export const AccountLinkText = styled(Typography)({
-  marginLeft: '8px'
+  marginLeft: '8px',
+  color: 'inherit',
+  textDecoration: 'none'
 });

@@ -67,7 +67,7 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Ensure username is unique
 	user := models.User{}
-	h.DB.Where("username = ?", username).First(&user)
+	h.DB.Where("username = ? or original_username = ?", username, username).First(&user)
 	if user.ID != 0 {
 		http.Error(w, "Username already taken", http.StatusBadRequest)
 		return
@@ -145,7 +145,7 @@ func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	password := loginRequest.Password
 
 	var user models.User
-	result := h.DB.Where("username = ? OR email = ?", identifier, identifier).First(&user)
+	result := h.DB.Where("username = ? OR original_username = ? OR email = ?", identifier, identifier, identifier).First(&user)
 	if result.Error != nil {
 		http.Error(w, "Invalid username or email", http.StatusBadRequest)
 		return
@@ -226,6 +226,14 @@ func (h *Handler) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+type AccountSettings struct {
+	Username         string `json:"username"`
+	OriginalUsername string `json:"originalUsername"`
+	Email            string `json:"email"`
+	EmailVerified    bool   `json:"emailVerified"`
+	NameColor        string `json:"nameColor"`
+}
+
 func (h *Handler) AccountSettingsHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := h.Store.Get(r, "session")
 	if err != nil {
@@ -246,19 +254,21 @@ func (h *Handler) AccountSettingsHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	accountSettings := AccountSettings{
+		Username:         user.Username,
+		OriginalUsername: user.OriginalUsername,
+		Email:            user.Email,
+		EmailVerified:    user.EmailVerified,
+		NameColor:        user.NameColor,
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"username":         user.Username,
-		"originalUsername": user.OriginalUsername,
-		"email":            user.Email,
-		"emailVerified":    user.EmailVerified,
-		"nameColor":        user.NameColor,
-	})
+	json.NewEncoder(w).Encode(accountSettings)
 }
 
 type UpdatePasswordRequest struct {
-	OldPassword string
-	NewPassword string
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
 }
 
 func (h *Handler) UpdatePasswordHandler(w http.ResponseWriter, r *http.Request) {
@@ -273,6 +283,8 @@ func (h *Handler) UpdatePasswordHandler(w http.ResponseWriter, r *http.Request) 
 	// Access the old and new password from the parsed object
 	oldPassword := updatePasswordRequest.OldPassword
 	newPassword := updatePasswordRequest.NewPassword
+
+	// TODO make sure password meets requirements
 
 	session, err := h.Store.Get(r, "session")
 	if err != nil {
@@ -369,7 +381,7 @@ func (h *Handler) UpdateUsernameHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	// Ensure username is unique
-	h.DB.Where("username = ?", username).First(&user)
+	h.DB.Where("username = ? or original_username = ?", username, username).First(&user)
 	if user.ID != 0 && user.ID != userID {
 		http.Error(w, "Username already taken", http.StatusBadRequest)
 		return

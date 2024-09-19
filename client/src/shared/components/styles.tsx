@@ -8,10 +8,17 @@ export const Divider = styled(MuiDivider)({
 
 export const Form = styled('form')({
   textAlign: 'center',
-  margin: '0px auto 15px auto',
+  margin: '0 auto 1rem auto',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
 
   '& > .MuiFormControl-root': {
-    marginTop: '15px'
+    marginTop: '1rem',
+
+    '&:last-of-type': {
+      marginBottom: '1rem'
+    },
   },
 
   '.ninja-field': {

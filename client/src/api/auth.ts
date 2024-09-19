@@ -43,3 +43,12 @@ export const requestUpdateUsername = async (username: string, nameColor: string)
   const postConfig = getPostConfig(data);
   return await fetch(`${baseUrl}/account/username`, postConfig);
 }
+
+export const requestUpdatePassword = async (oldPassword: string, newPassword: string) => {
+  const data = {
+    oldPassword,
+    newPassword
+  };
+  const postConfig = getPostConfig(data);
+  return await fetch(`${baseUrl}/account/password`, postConfig);
+}

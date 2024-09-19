@@ -4,6 +4,7 @@ import {
   requestLogin,
   requestLogout,
   requestRegister,
+  requestUpdatePassword,
   requestUpdateUsername
 } from 'api';
 import { useState } from 'react';
@@ -251,37 +252,14 @@ export const useAccountSettings = () => {
     }
   };
 
-  const handleSubmitPassword = async (data: TODO) => {
+  const handleSubmitPassword = async (oldPassword: string, newPassword: string) => {
     setIsSubmitting('password');
 
-    const { oldPassword, newPassword, confirmPassword } = data;
-
-    // Password meets requirements
-    // 8 or more characters
-    // 1 letter
-    // 1 number
-    // 1 special character
-    const passwordRegex: RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*\W).{8,}$/;
-    if (!passwordRegex.test(newPassword)) {
-      dispatch(
-        setErrorMessage(
-          'Password must have at least 8 characters, with at least 1 letter, number, and special character'
-        )
-      );
-      return;
-    }
-
-    // Check passwords match
-    if (newPassword !== confirmPassword) {
-      dispatch(setErrorMessage('Passwords do not match'));
-      return;
-    }
-
     try {
-      const response = await requestUpdatePassword({
+      const response = await requestUpdatePassword(
         oldPassword,
         newPassword
-      });
+      );
 
       if (response.status === 200) {
         dispatch(setSuccessMessage('Password updated'));

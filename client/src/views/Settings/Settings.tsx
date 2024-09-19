@@ -4,11 +4,13 @@ import { Button, TextField, Typography } from '@mui/material';
 import { CirclePicker } from 'react-color';
 import { useAccountSettings } from 'hooks';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
 import { User } from 'types';
+import { setErrorMessage } from 'store/slices/notifications';
 
 const Settings = () => {
+  const dispatch = useDispatch();
   const { isLoading, isSubmitting, handleGetSettings, handleSubmitUsername, handleSubmitPassword } = useAccountSettings();
   const user: User = useSelector((state: TODO) => state.user);
 
@@ -39,7 +41,14 @@ const Settings = () => {
   };
 
   const onSubmitPassword = (data: TODO) => {
-    alert('TODO: Implement password update');
+    const { oldPassword, newPassword, confirmPassword } = data;
+
+    if (newPassword !== confirmPassword) {
+      dispatch(setErrorMessage('Passwords do not match'));
+      return;
+    }
+
+    handleSubmitPassword(oldPassword, newPassword);
   };
 
   if (isLoading) {
@@ -68,7 +77,7 @@ const Settings = () => {
             setUsernameValue('nameColor', color.hex);
           }}
         />
-        <Typography>Preview: {'TODO: USERNAME'}</Typography>
+        <Typography>Preview: {username} (TODO:Color)</Typography>
         <Button variant="contained" type="submit" disabled={Boolean(isSubmitting)}>
           Update Username
         </Button>
