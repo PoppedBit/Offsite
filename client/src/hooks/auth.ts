@@ -3,7 +3,8 @@ import {
   requestCheckSession,
   requestLogin,
   requestLogout,
-  requestRegister
+  requestRegister,
+  requestUpdateUsername
 } from 'api';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -218,10 +219,8 @@ export const useAccountSettings = () => {
     }
   };
 
-  const handleSubmitUsername = async (data: TODO) => {
+  const handleSubmitUsername = async (username: string, nameColor: string) => {
     setIsSubmitting('username');
-
-    const { username, nameColor } = data;
 
     // Check username meets requirements
     // ensures that the string starts with an alphanumeric character
@@ -232,13 +231,14 @@ export const useAccountSettings = () => {
     }
 
     try {
-      const response = await requestUpdateUsername({
+      const response = await requestUpdateUsername(
         username,
         nameColor
-      });
+      );
 
       if (response.status === 200) {
         dispatch(setSuccessMessage('Username updated'));
+        dispatch(setUser({ username, nameColor }));
       } else {
         const error = await response.text();
         dispatch(setErrorMessage(error));

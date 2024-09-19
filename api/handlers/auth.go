@@ -322,3 +322,67 @@ func (h *Handler) UpdatePasswordHandler(w http.ResponseWriter, r *http.Request) 
 
 	w.WriteHeader(http.StatusOK)
 }
+
+type UpdateUsernameRequest struct {
+	Username  string `json:"username"`
+	NameColor string `json:"nameColor"`
+}
+
+func (h *Handler) UpdateUsernameHandler(w http.ResponseWriter, r *http.Request) {
+	// Parse the JSON request body
+	var updateUsernameRequest UpdateUsernameRequest
+	err := json.NewDecoder(r.Body).Decode(&updateUsernameRequest)
+	if err != nil {
+		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
+		return
+	}
+
+	// Access the username from the parsed object
+	username := updateUsernameRequest.Username
+	nameColor := updateUsernameRequest.NameColor
+
+	session, err := h.Store.Get(r, "session")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	userID := session.Values["id"]
+	if userID == nil {
+		http.Error(w, "Not logged in", http.StatusUnauthorized)
+		return
+	}
+
+	var user models.User
+	result := h.DB.First(&user, userID)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Disallowed usernames,
+	for _, disallowedUsername := range DisallowedUsernames {
+		if username == disallowedUsername {
+			http.Error(w, "Invalid username", http.StatusBadRequest)
+			return
+		}
+	}
+
+	// Ensure username is unique
+	h.DB.Where("username = ?", username).First(&user)
+	if user.ID != 0 && user.ID != userID {
+		http.Error(w, "Username already taken", http.StatusBadRequest)
+		return
+	}
+
+	user.Username = username
+	user.NameColor = nameColor
+
+	result = h.DB.Save(&user)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

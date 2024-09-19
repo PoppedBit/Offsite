@@ -9,18 +9,18 @@ import { TODO } from 'shared/types';
 import { User } from 'types';
 
 const Settings = () => {
-  const { isLoading, isSubmitting, handleGetSettings } = useAccountSettings();
+  const { isLoading, isSubmitting, handleGetSettings, handleSubmitUsername, handleSubmitPassword } = useAccountSettings();
   const user: User = useSelector((state: TODO) => state.user);
 
   const { username, originalUsername, email, emailVerified, nameColor } = user;
 
   const {
     register: registerUsername,
-    handleSubmit: handleSubmitUsername,
+    handleSubmit: submitUserName,
     setValue: setUsernameValue,
     reset: resetUsername
   } = useForm();
-  const { register: registerPassword, handleSubmit: handleSubmitPassword } = useForm();
+  const { register: registerPassword, handleSubmit: submitPassword } = useForm();
 
   useEffect(() => {
     handleGetSettings();
@@ -33,11 +33,12 @@ const Settings = () => {
     });
   }, [user]);
 
-  const onSubmitUsername = (data: any) => {
-    alert('TODO: Implement username update');
+  const onSubmitUsername = (data: TODO) => {
+    const { username, nameColor } = data;
+    handleSubmitUsername(username, nameColor);
   };
 
-  const onSubmitPassword = (data: any) => {
+  const onSubmitPassword = (data: TODO) => {
     alert('TODO: Implement password update');
   };
 
@@ -48,7 +49,7 @@ const Settings = () => {
   return (
     <>
       <PageHeader text="Settings" links={[]} />
-      <Form onSubmit={handleSubmitUsername(onSubmitUsername)}>
+      <Form onSubmit={submitUserName(onSubmitUsername)}>
         <Typography>
           Your original username will always stay reserved for you: {originalUsername}
         </Typography>
@@ -73,7 +74,7 @@ const Settings = () => {
         </Button>
       </Form>
       <Divider />
-      <Form onSubmit={handleSubmitPassword(onSubmitPassword)}>
+      <Form onSubmit={submitPassword(onSubmitPassword)}>
         <TextField
           label="Old Password"
           type="password"

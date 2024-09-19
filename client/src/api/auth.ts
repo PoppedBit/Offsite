@@ -34,3 +34,12 @@ export const requestAccount = async () => {
   const config = getRequestConfig();
   return await fetch(`${baseUrl}/account`, config);
 };
+
+export const requestUpdateUsername = async (username: string, nameColor: string) => {
+  const data = {
+    username,
+    nameColor
+  };
+  const postConfig = getPostConfig(data);
+  return await fetch(`${baseUrl}/account/username`, postConfig);
+}
