@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
 import { Dialog, Snackbars, Loading, Header, } from 'shared/components';
 import { Home, Login as LoginIcon, Logout, PersonAdd, Settings as SettingsIcon } from '@mui/icons-material';
-import { useCheckSession, useLogout } from 'views/Login/hooks';
+import { useCheckSession, useLogout } from 'hooks';
 import { useEffect } from 'react';
 
 // Seahawk theme

@@ -18,3 +18,19 @@ export const requestLogout = async () => {
   const config = getRequestConfig();
   return await fetch(`${baseUrl}/logout`, config);
 };
+
+export interface RequestRegister {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export const requestRegister = async (data: RequestRegister) => {
+  const postConfig = getPostConfig(data);
+  return await fetch(`${baseUrl}/register`, postConfig);
+};
+
+export const requestAccount = async () => {
+  const config = getRequestConfig();
+  return await fetch(`${baseUrl}/account-settings`, config);
+};

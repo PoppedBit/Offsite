@@ -3,7 +3,7 @@ import { Button, TextField } from '@mui/material';
 
 import { Form, PageHeader } from 'shared/components';
 import { useNavigate } from 'react-router-dom';
-import { useRegister } from './hooks';
+import { useRegister } from 'hooks';
 
 const Register = () => {
   const { register, handleSubmit } = useForm();
@@ -20,6 +20,7 @@ const Register = () => {
           fullWidth
           {...register('email', { required: false })}
           autoComplete="email"
+          autoFocus
         />
         <TextField
           label="Password"
