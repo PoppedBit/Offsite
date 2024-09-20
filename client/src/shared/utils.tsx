@@ -49,4 +49,4 @@ export const convertKilometersToMiles = (kilometers: number): number => {
 
 export const getUserPFP = (userId: number): string => {
   return `${baseUrl}/account/pfp/${userId}`;
-}
+};

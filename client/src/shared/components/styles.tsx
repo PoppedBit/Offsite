@@ -18,7 +18,7 @@ export const Form = styled('form')({
 
     '&:last-of-type': {
       marginBottom: '1rem'
-    },
+    }
   },
 
   '.ninja-field': {

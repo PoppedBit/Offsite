@@ -42,7 +42,7 @@ export const requestUpdateUsername = async (username: string, nameColor: string)
   };
   const postConfig = getPostConfig(data);
   return await fetch(`${baseUrl}/account/username`, postConfig);
-}
+};
 
 export const requestUpdatePFP = async (file: File) => {
   const formData = new FormData();
@@ -52,7 +52,7 @@ export const requestUpdatePFP = async (file: File) => {
     body: formData
   };
   return await fetch(`${baseUrl}/account/pfp`, postConfig);
-}
+};
 
 export const requestUpdatePassword = async (oldPassword: string, newPassword: string) => {
   const data = {
@@ -61,4 +61,4 @@ export const requestUpdatePassword = async (oldPassword: string, newPassword: st
   };
   const postConfig = getPostConfig(data);
   return await fetch(`${baseUrl}/account/password`, postConfig);
-}
+};

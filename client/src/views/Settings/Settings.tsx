@@ -14,7 +14,14 @@ import { PFPAvatar } from './styles';
 
 const Settings = () => {
   const dispatch = useDispatch();
-  const { isLoading, isSubmitting, handleGetSettings, handleSubmitUsername, handleUpdatePFP, handleSubmitPassword } = useAccountSettings();
+  const {
+    isLoading,
+    isSubmitting,
+    handleGetSettings,
+    handleSubmitUsername,
+    handleUpdatePFP,
+    handleSubmitPassword
+  } = useAccountSettings();
   const user: User = useSelector((state: TODO) => state.user);
 
   const { username, originalUsername, email, emailVerified, nameColor } = user;
@@ -25,10 +32,7 @@ const Settings = () => {
     setValue: setUsernameValue,
     reset: resetUsername
   } = useForm();
-  const {
-    register: registerPFP,
-    reset: resetPFP
-  } = useForm();
+  const { register: registerPFP, reset: resetPFP } = useForm();
   const { register: registerPassword, handleSubmit: submitPassword } = useForm();
 
   useEffect(() => {
@@ -98,25 +102,19 @@ const Settings = () => {
       <Typography>Email: {email}</Typography>
       <Typography>Email Verified: {emailVerified ? 'Yes' : 'No'}</Typography>
       <Divider />
-      <PFPAvatar 
-        src={getUserPFP(user.id)}
-      >
+      <PFPAvatar src={getUserPFP(user.id)}>
         <AccountCircle />
       </PFPAvatar>
       <Form>
-        <Button
-          variant="contained"
-          component="label"
-          disabled={Boolean(isSubmitting)}
-        >
+        <Button variant="contained" component="label" disabled={Boolean(isSubmitting)}>
           Upload File
           <input
             type="file"
             hidden
             {...registerPFP('file', { required: true })}
-            accept='image/*'
+            accept="image/*"
             onChange={(e) => {
-              const file = e.target?.files?.[0];  // Access the file directly from the event
+              const file = e.target?.files?.[0]; // Access the file directly from the event
               if (file) {
                 // Trigger the form submission manually
                 console.log(file);

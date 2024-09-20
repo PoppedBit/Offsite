@@ -29,9 +29,7 @@ const PageHeader = (props: Props) => {
 
   return (
     <Header>
-      <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
-        {breadcrumbs}
-      </Breadcrumbs>
+      <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>{breadcrumbs}</Breadcrumbs>
       <HeaderText>{text}</HeaderText>
     </Header>
   );

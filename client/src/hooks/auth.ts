@@ -233,10 +233,7 @@ export const useAccountSettings = () => {
     }
 
     try {
-      const response = await requestUpdateUsername(
-        username,
-        nameColor
-      );
+      const response = await requestUpdateUsername(username, nameColor);
 
       if (response.status === 200) {
         dispatch(setSuccessMessage('Username updated'));
@@ -271,16 +268,13 @@ export const useAccountSettings = () => {
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   const handleSubmitPassword = async (oldPassword: string, newPassword: string) => {
     setIsSubmitting('password');
 
     try {
-      const response = await requestUpdatePassword(
-        oldPassword,
-        newPassword
-      );
+      const response = await requestUpdatePassword(oldPassword, newPassword);
 
       if (response.status === 200) {
         dispatch(setSuccessMessage('Password updated'));
