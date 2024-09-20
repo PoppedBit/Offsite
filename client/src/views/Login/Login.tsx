@@ -20,7 +20,7 @@ const Login = () => {
 
   return (
     <>
-      <PageHeader links={[]} text="Log In" />
+      <PageHeader text="Login" />
       <Form onSubmit={handleSubmit(submitLogin)}>
         <TextField
           label="Username or Email"

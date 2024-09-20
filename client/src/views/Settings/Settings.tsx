@@ -1,6 +1,6 @@
 import { Divider, Form, PageHeader } from 'shared/components';
 import { useForm } from 'react-hook-form';
-import { Button, TextField, Typography } from '@mui/material';
+import { Avatar, Button, TextField, Typography } from '@mui/material';
 import { CirclePicker } from 'react-color';
 import { useAccountSettings } from 'hooks';
 import { useEffect } from 'react';
@@ -8,10 +8,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
 import { User } from 'types';
 import { setErrorMessage } from 'store/slices/notifications';
+import { getUserPFP } from 'shared/utils';
+import { AccountCircle } from '@mui/icons-material';
+import { PFPAvatar } from './styles';
 
 const Settings = () => {
   const dispatch = useDispatch();
-  const { isLoading, isSubmitting, handleGetSettings, handleSubmitUsername, handleSubmitPassword } = useAccountSettings();
+  const { isLoading, isSubmitting, handleGetSettings, handleSubmitUsername, handleUpdatePFP, handleSubmitPassword } = useAccountSettings();
   const user: User = useSelector((state: TODO) => state.user);
 
   const { username, originalUsername, email, emailVerified, nameColor } = user;
@@ -21,6 +24,10 @@ const Settings = () => {
     handleSubmit: submitUserName,
     setValue: setUsernameValue,
     reset: resetUsername
+  } = useForm();
+  const {
+    register: registerPFP,
+    reset: resetPFP
   } = useForm();
   const { register: registerPassword, handleSubmit: submitPassword } = useForm();
 
@@ -40,6 +47,11 @@ const Settings = () => {
     handleSubmitUsername(username, nameColor);
   };
 
+  const onSubmitPFP = (file: File) => {
+    handleUpdatePFP(file);
+    resetPFP();
+  };
+
   const onSubmitPassword = (data: TODO) => {
     const { oldPassword, newPassword, confirmPassword } = data;
 
@@ -57,7 +69,7 @@ const Settings = () => {
 
   return (
     <>
-      <PageHeader text="Settings" links={[]} />
+      <PageHeader text="Settings" />
       <Form onSubmit={submitUserName(onSubmitUsername)}>
         <Typography>
           Your original username will always stay reserved for you: {originalUsername}
@@ -80,6 +92,39 @@ const Settings = () => {
         <Typography>Preview: {username} (TODO:Color)</Typography>
         <Button variant="contained" type="submit" disabled={Boolean(isSubmitting)}>
           Update Username
+        </Button>
+      </Form>
+      <Divider />
+      <Typography>Email: {email}</Typography>
+      <Typography>Email Verified: {emailVerified ? 'Yes' : 'No'}</Typography>
+      <Divider />
+      <PFPAvatar 
+        src={getUserPFP(user.id)}
+      >
+        <AccountCircle />
+      </PFPAvatar>
+      <Form>
+        <Button
+          variant="contained"
+          component="label"
+          disabled={Boolean(isSubmitting)}
+        >
+          Upload File
+          <input
+            type="file"
+            hidden
+            {...registerPFP('file', { required: true })}
+            accept='image/*'
+            onChange={(e) => {
+              const file = e.target?.files?.[0];  // Access the file directly from the event
+              if (file) {
+                // Trigger the form submission manually
+                console.log(file);
+                onSubmitPFP(file);
+              }
+            }}
+            disabled={Boolean(isSubmitting)}
+          />
         </Button>
       </Form>
       <Divider />

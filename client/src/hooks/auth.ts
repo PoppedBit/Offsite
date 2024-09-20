@@ -5,6 +5,7 @@ import {
   requestLogout,
   requestRegister,
   requestUpdatePassword,
+  requestUpdatePFP,
   requestUpdateUsername
 } from 'api';
 import { useState } from 'react';
@@ -197,7 +198,7 @@ export const useRegister = () => {
 export const useAccountSettings = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSubmitting, setIsSubmitting] = useState<'username' | 'password' | false>(false);
+  const [isSubmitting, setIsSubmitting] = useState<'username' | 'pfp' | 'password' | false>(false);
 
   const handleGetSettings = async () => {
     setIsLoading(true);
@@ -252,6 +253,26 @@ export const useAccountSettings = () => {
     }
   };
 
+  const handleUpdatePFP = async (file: File) => {
+    setIsSubmitting('pfp');
+
+    try {
+      const response = await requestUpdatePFP(file);
+
+      if (response.status === 200) {
+        dispatch(setSuccessMessage('Profile picture updated'));
+      } else {
+        const error = await response.text();
+        dispatch(setErrorMessage(error));
+      }
+    } catch (e) {
+      console.log(e);
+      dispatch(setErrorMessage('An unexpected error occured'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   const handleSubmitPassword = async (oldPassword: string, newPassword: string) => {
     setIsSubmitting('password');
 
@@ -280,6 +301,7 @@ export const useAccountSettings = () => {
     handleGetSettings,
     isSubmitting,
     handleSubmitUsername,
+    handleUpdatePFP,
     handleSubmitPassword
   };
 };

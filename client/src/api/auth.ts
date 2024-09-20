@@ -44,6 +44,16 @@ export const requestUpdateUsername = async (username: string, nameColor: string)
   return await fetch(`${baseUrl}/account/username`, postConfig);
 }
 
+export const requestUpdatePFP = async (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const postConfig = {
+    method: 'POST',
+    body: formData
+  };
+  return await fetch(`${baseUrl}/account/pfp`, postConfig);
+}
+
 export const requestUpdatePassword = async (oldPassword: string, newPassword: string) => {
   const data = {
     oldPassword,

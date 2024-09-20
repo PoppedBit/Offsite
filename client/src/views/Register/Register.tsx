@@ -12,7 +12,7 @@ const Register = () => {
 
   return (
     <>
-      <PageHeader links={[]} text="Register" />
+      <PageHeader text="Register" />
       <Form onSubmit={handleSubmit(handleSubmitRegister)}>
         <TextField label="Username" fullWidth {...register('username', { required: true })} />
         <TextField

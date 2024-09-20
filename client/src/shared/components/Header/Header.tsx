@@ -11,6 +11,7 @@ import {
 import { useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
 import { AccountCircle } from '@mui/icons-material';
+import { getUserPFP } from 'shared/utils';
 
 const Header = () => {
   const user = useSelector((state: TODO) => state.user);
@@ -30,7 +31,7 @@ const Header = () => {
           <RightGrid item xs={2}>
             {isAuthenticated && (
               <AccountLink to={`/${username}`}>
-                <Avatar>
+                <Avatar src={getUserPFP(user.id)}>
                   <AccountCircle />
                 </Avatar>
                 <AccountLinkText variant="body1">{username}</AccountLinkText>

@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import { Breadcrumbs } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import HomeIcon from '@mui/icons-material/Home';
-
 import { BreadcrumbLink, Header, HeaderText } from './styles';
 import { TODO } from 'shared/types';
 
@@ -32,9 +30,6 @@ const PageHeader = (props: Props) => {
   return (
     <Header>
       <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
-        <BreadcrumbLink key="home" to={'/'}>
-          <HomeIcon />
-        </BreadcrumbLink>
         {breadcrumbs}
       </Breadcrumbs>
       <HeaderText>{text}</HeaderText>
