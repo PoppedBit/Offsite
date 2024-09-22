@@ -47,6 +47,10 @@ export const convertKilometersToMiles = (kilometers: number): number => {
   return Math.round((kilometers / 1.60934) * 10) / 10;
 };
 
-export const getUserPFP = (userId: number): string => {
-  return `${baseUrl}/account/pfp/${userId}`;
+export const getUserPFP = (userId?: number): string => {
+  let url = `${baseUrl}/account/pfp`;
+  if (userId) {
+    url += `/${userId}`;
+  }
+  return url;
 };

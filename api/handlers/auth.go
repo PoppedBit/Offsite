@@ -179,6 +179,13 @@ func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+type UserSession struct {
+	ID        uint   `json:"id"`
+	Username  string `json:"username"`
+	IsAdmin   bool   `json:"isAdmin"`
+	NameColor string `json:"nameColor"`
+}
+
 func (h *Handler) CheckSessionHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := h.Store.Get(r, "session")
 	if err != nil {
@@ -187,8 +194,13 @@ func (h *Handler) CheckSessionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userID := session.Values["id"]
-	username := ""
-	isAdmin := false
+
+	userSession := UserSession{
+		ID:        userID.(uint),
+		Username:  "",
+		IsAdmin:   false,
+		NameColor: "",
+	}
 
 	if userID != nil {
 		var user models.User
@@ -201,16 +213,13 @@ func (h *Handler) CheckSessionHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		username = user.Username
-		isAdmin = user.IsAdmin
+		userSession.Username = user.Username
+		userSession.IsAdmin = user.IsAdmin
+		userSession.NameColor = user.NameColor
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"id":       userID,
-		"username": username,
-		"isAdmin":  isAdmin,
-	})
+	json.NewEncoder(w).Encode(userSession)
 }
 
 func (h *Handler) LogoutHandler(w http.ResponseWriter, r *http.Request) {
@@ -237,6 +246,7 @@ type AccountSettings struct {
 	Email            string `json:"email"`
 	EmailVerified    bool   `json:"emailVerified"`
 	NameColor        string `json:"nameColor"`
+	PFP              string `json:"pfp"`
 }
 
 func (h *Handler) AccountSettingsHandler(w http.ResponseWriter, r *http.Request) {
@@ -247,7 +257,7 @@ func (h *Handler) AccountSettingsHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	userID := session.Values["id"]
-	if userID == nil {
+	if userID == 0 {
 		http.Error(w, "Not logged in", http.StatusUnauthorized)
 		return
 	}
@@ -259,12 +269,21 @@ func (h *Handler) AccountSettingsHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	pfpFileName := ""
+
+	pfp := models.Upload{}
+	h.DB.Where("created_user_id = ? AND category = 'pfp'", user.ID).First(&pfp)
+	if pfp.ID != 0 {
+		pfpFileName = pfp.FileName
+	}
+
 	accountSettings := AccountSettings{
 		Username:         user.Username,
 		OriginalUsername: user.OriginalUsername,
 		Email:            user.Email,
 		EmailVerified:    user.EmailVerified,
 		NameColor:        user.NameColor,
+		PFP:              pfpFileName,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -298,7 +317,7 @@ func (h *Handler) UpdatePasswordHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	userID := session.Values["id"]
-	if userID == nil {
+	if userID == 0 {
 		http.Error(w, "Not logged in", http.StatusUnauthorized)
 		return
 	}
@@ -477,9 +496,37 @@ func (h *Handler) UpdateProfilePictureHandler(w http.ResponseWriter, r *http.Req
 
 func (h *Handler) GetProfilePictureHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	userID, err := strconv.ParseUint(vars["userID"], 10, 64)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+
+	var userID uint
+
+	// If no userID is provided, get the profile picture of the logged in user
+	if _, ok := vars["userID"]; !ok {
+		session, err := h.Store.Get(r, "session")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		userID = session.Values["id"].(uint)
+
+		if userID == 0 {
+			http.Error(w, "Not logged in", http.StatusUnauthorized)
+			return
+		}
+	}
+
+	if _, ok := vars["userID"]; ok {
+		var err error
+		userID64, err := strconv.ParseUint(vars["userID"], 10, 64)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		userID = uint(userID64)
+	}
+
+	if userID == 0 {
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
 		return
 	}
 
@@ -491,4 +538,50 @@ func (h *Handler) GetProfilePictureHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	http.ServeFile(w, r, upload.UploadPath)
+}
+
+func (h *Handler) DeleteProfilePictureHandler(w http.ResponseWriter, r *http.Request) {
+	session, err := h.Store.Get(r, "session")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	userID := session.Values["id"]
+	if userID == nil {
+		http.Error(w, "Not logged in", http.StatusUnauthorized)
+		return
+	}
+
+	var user models.User
+	result := h.DB.First(&user, userID)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var upload models.Upload
+	result = h.DB.Where("created_user_id = ? AND category = 'pfp'", userID).First(&upload)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// If upload.UploadPath exists, delete it
+	_, err = os.Stat(upload.UploadPath)
+	if err == nil {
+		err = os.Remove(upload.UploadPath)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	result = h.DB.Delete(&upload)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

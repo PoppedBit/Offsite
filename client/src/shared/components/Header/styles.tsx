@@ -34,11 +34,18 @@ export const AccountLink = styled(Link)({
   alignItems: 'center',
   textDecoration: 'none',
   color: 'inherit',
-  textDecorationColor: 'none'
+  textDecorationColor: 'none',
 });
 
-export const AccountLinkText = styled(Typography)({
+interface AccountLinkTextProps {
+  backgroundColor?: string;
+}
+
+export const AccountLinkText = styled(Typography)<AccountLinkTextProps>(({ backgroundColor }) => ({
   marginLeft: '8px',
   color: 'inherit',
-  textDecoration: 'none'
-});
+  textDecoration: 'none',
+  backgroundColor: backgroundColor || '#FF69B4',
+  padding: '4px 8px',
+  borderRadius: '4px'
+}));

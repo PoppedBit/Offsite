@@ -15,5 +15,7 @@ func registerAuthRoutes(r *mux.Router, handler *handlers.Handler) {
 	r.HandleFunc("/account/username", handler.UpdateUsernameHandler).Methods("POST")
 	r.HandleFunc("/account/pfp", handler.UpdateProfilePictureHandler).Methods("POST")
 	r.HandleFunc("/account/password", handler.UpdatePasswordHandler).Methods("POST")
+	r.HandleFunc("/account/pfp", handler.GetProfilePictureHandler).Methods("GET")
 	r.HandleFunc("/account/pfp/{userID}", handler.GetProfilePictureHandler).Methods("GET")
+	r.HandleFunc("/account/pfp", handler.DeleteProfilePictureHandler).Methods("DELETE")
 }

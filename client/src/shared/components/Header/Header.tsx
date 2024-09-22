@@ -15,7 +15,7 @@ import { getUserPFP } from 'shared/utils';
 
 const Header = () => {
   const user = useSelector((state: TODO) => state.user);
-  const { id, username } = user;
+  const { id, username, nameColor } = user;
 
   const isAuthenticated = Boolean(id);
 
@@ -34,7 +34,7 @@ const Header = () => {
                 <Avatar src={getUserPFP(user.id)}>
                   <AccountCircle />
                 </Avatar>
-                <AccountLinkText variant="body1">{username}</AccountLinkText>
+                <AccountLinkText variant="body1" backgroundColor={nameColor}>{username}</AccountLinkText>
               </AccountLink>
             )}
           </RightGrid>

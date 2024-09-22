@@ -1,4 +1,4 @@
-import { baseUrl, getPostConfig, getRequestConfig } from 'shared/api';
+import { baseUrl, getDeleteConfig, getPostConfig, getRequestConfig } from 'shared/api';
 
 export const requestLogin = async (identifier: string, password: string) => {
   const data = {
@@ -53,6 +53,11 @@ export const requestUpdatePFP = async (file: File) => {
   };
   return await fetch(`${baseUrl}/account/pfp`, postConfig);
 };
+
+export const requestDeletePFP = async () => {
+  const config = getDeleteConfig({});
+  return await fetch(`${baseUrl}/account/pfp`, config);
+}
 
 export const requestUpdatePassword = async (oldPassword: string, newPassword: string) => {
   const data = {

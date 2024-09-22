@@ -1,6 +1,7 @@
 import {
   requestAccount,
   requestCheckSession,
+  requestDeletePFP,
   requestLogin,
   requestLogout,
   requestRegister,
@@ -261,6 +262,7 @@ export const useAccountSettings = () => {
       } else {
         const error = await response.text();
         dispatch(setErrorMessage(error));
+        window.location.href = window.location.href;
       }
     } catch (e) {
       console.log(e);
@@ -269,6 +271,30 @@ export const useAccountSettings = () => {
       setIsSubmitting(false);
     }
   };
+
+  const handleDeletePFP = async () => {
+    setIsSubmitting('pfp');
+
+    try {
+      const response = await requestDeletePFP();
+
+      if (response.status === 200) {
+        dispatch(setUser({ pfp: "" }));
+        dispatch(setSuccessMessage('Profile picture deleted'));
+        window.location.href = window.location.href;
+      } else {
+        const error = await response.text();
+        dispatch(setErrorMessage(error));
+      }
+    } catch (e) {
+      console.log(e);
+      dispatch(setErrorMessage('An unexpected error occured'));
+    } finally {
+      setIsSubmitting(false);
+    }
+
+
+  }
 
   const handleSubmitPassword = async (oldPassword: string, newPassword: string) => {
     setIsSubmitting('password');
@@ -296,6 +322,7 @@ export const useAccountSettings = () => {
     isSubmitting,
     handleSubmitUsername,
     handleUpdatePFP,
+    handleDeletePFP,
     handleSubmitPassword
   };
 };
