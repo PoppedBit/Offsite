@@ -189,7 +189,6 @@ type UserSession struct {
 func (h *Handler) CheckSessionHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := h.Store.Get(r, "session")
 	if err != nil {
-		println("It is this")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

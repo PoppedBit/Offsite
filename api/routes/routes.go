@@ -7,4 +7,5 @@ import (
 
 func RegisterRoutes(r *mux.Router, handler *handlers.Handler) {
 	registerAuthRoutes(r, handler)
+	registerAdminRoutes(r, handler)
 }

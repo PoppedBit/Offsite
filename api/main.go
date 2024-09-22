@@ -46,24 +46,3 @@ func main() {
 	println("Server running at http://localhost:" + port)
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
-
-// Middleware to inject authentication status response context
-// func InjectAuthStatus(store *sessions.CookieStore) func(http.Handler) http.Handler {
-// 	return func(next http.Handler) http.Handler {
-// 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 			session, _ := store.Get(r, "session")
-
-// 			isAuthenticated := session.Values["id"] != nil
-// 			ctx := context.WithValue(r.Context(), "isAuthenticated", isAuthenticated)
-
-// 			if isAuthenticated {
-// 				userId := session.Values["id"]
-// 				userEmail := session.Values["username"]
-// 				ctx = context.WithValue(ctx, "id", userId)
-// 				ctx = context.WithValue(ctx, "username", userEmail)
-// 			}
-
-// 			next.ServeHTTP(w, r.WithContext(ctx))
-// 		})
-// 	}
-// }
