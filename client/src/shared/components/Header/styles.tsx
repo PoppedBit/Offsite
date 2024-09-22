@@ -34,7 +34,7 @@ export const AccountLink = styled(Link)({
   alignItems: 'center',
   textDecoration: 'none',
   color: 'inherit',
-  textDecorationColor: 'none',
+  textDecorationColor: 'none'
 });
 
 interface AccountLinkTextProps {

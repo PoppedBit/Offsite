@@ -279,7 +279,7 @@ export const useAccountSettings = () => {
       const response = await requestDeletePFP();
 
       if (response.status === 200) {
-        dispatch(setUser({ pfp: "" }));
+        dispatch(setUser({ pfp: '' }));
         dispatch(setSuccessMessage('Profile picture deleted'));
         window.location.href = window.location.href;
       } else {
@@ -292,9 +292,7 @@ export const useAccountSettings = () => {
     } finally {
       setIsSubmitting(false);
     }
-
-
-  }
+  };
 
   const handleSubmitPassword = async (oldPassword: string, newPassword: string) => {
     setIsSubmitting('password');

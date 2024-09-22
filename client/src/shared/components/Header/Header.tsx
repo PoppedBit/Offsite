@@ -34,7 +34,9 @@ const Header = () => {
                 <Avatar src={getUserPFP(user.id)}>
                   <AccountCircle />
                 </Avatar>
-                <AccountLinkText variant="body1" backgroundColor={nameColor}>{username}</AccountLinkText>
+                <AccountLinkText variant="body1" backgroundColor={nameColor}>
+                  {username}
+                </AccountLinkText>
               </AccountLink>
             )}
           </RightGrid>

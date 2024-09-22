@@ -15,7 +15,6 @@ export const UsernamePreview = styled(Typography)<UsernamePreviewProps>(({ backg
   borderRadius: '.25rem'
 }));
 
-
 export const PFPAvatar = styled(Avatar)({
   width: '16rem',
   height: '16rem',

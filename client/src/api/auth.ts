@@ -57,7 +57,7 @@ export const requestUpdatePFP = async (file: File) => {
 export const requestDeletePFP = async () => {
   const config = getDeleteConfig({});
   return await fetch(`${baseUrl}/account/pfp`, config);
-}
+};
 
 export const requestUpdatePassword = async (oldPassword: string, newPassword: string) => {
   const data = {
