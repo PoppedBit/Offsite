@@ -6,7 +6,7 @@ import {
   BottomNavigationAction,
   Typography
 } from '@mui/material';
-import { Admin, Login, Profile, Register, Settings } from './views';
+import { Admin, Login, Profile, Register, Settings, Users } from './views';
 import 'shared/styles/App.scss';
 import {
   setErrorMessage,
@@ -127,6 +127,7 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/settings/:tab?" element={<Settings />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/users" element={<Users />} />
             <Route path="/:username" element={<Profile />} />
             <Route path="/" element={<div>Home</div>} />
           </Routes>

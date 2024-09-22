@@ -6,5 +6,5 @@ import (
 )
 
 func registerAdminRoutes(r *mux.Router, handler *handlers.Handler) {
-	r.HandleFunc("/adnin/users", handler.GetUsersHandler).Methods("GET")
+	r.HandleFunc("/admin/users", handler.GetUsersHandler).Methods("GET")
 }

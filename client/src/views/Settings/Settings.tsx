@@ -28,7 +28,7 @@ const Settings = () => {
   } = useAccountSettings();
   const user: User = useSelector((state: TODO) => state.user);
 
-  const { username, originalUsername, email, emailVerified, nameColor, pfp } = user;
+  const { username, originalUsername, email, isEmailVerified, nameColor, pfp } = user;
 
   const {
     register: registerUsername,
@@ -131,7 +131,7 @@ const Settings = () => {
       { tab === 'email' && (
         <section>
           <Typography>Email: {email}</Typography>
-          <Typography>Email Verified: {emailVerified ? 'Yes' : 'No'}</Typography>
+          <Typography>Email Verified: {isEmailVerified ? 'Yes' : 'No'}</Typography>
         </section>
       )}
       { tab === 'pfp' && (

@@ -3,7 +3,7 @@ export type User = {
   username: string;
   originalUsername: string;
   email: string;
-  emailVerified: boolean;
+  isEmailVerified: boolean;
   nameColor: string;
   pfp: string;
 };

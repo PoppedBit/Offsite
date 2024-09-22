@@ -115,7 +115,7 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		Username:         username,
 		OriginalUsername: username,
 		Email:            email,
-		EmailVerified:    false,
+		IsEmailVerified:  false,
 		PasswordHash:     passwordHash,
 		PasswordSalt:     salt,
 		IsAdmin:          isAdmin,
@@ -175,6 +175,8 @@ func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	// TODO Update last login and last active
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -245,7 +247,7 @@ type AccountSettings struct {
 	Username         string `json:"username"`
 	OriginalUsername string `json:"originalUsername"`
 	Email            string `json:"email"`
-	EmailVerified    bool   `json:"emailVerified"`
+	IsEmailVerified  bool   `json:"IsEmailVerified"`
 	NameColor        string `json:"nameColor"`
 	PFP              string `json:"pfp"`
 }
@@ -282,7 +284,7 @@ func (h *Handler) AccountSettingsHandler(w http.ResponseWriter, r *http.Request)
 		Username:         user.Username,
 		OriginalUsername: user.OriginalUsername,
 		Email:            user.Email,
-		EmailVerified:    user.EmailVerified,
+		IsEmailVerified:  user.IsEmailVerified,
 		NameColor:        user.NameColor,
 		PFP:              pfpFileName,
 	}

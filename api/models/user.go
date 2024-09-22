@@ -6,24 +6,24 @@ import (
 
 type User struct {
 	gorm.Model
-	ID               uint `gorm:"primaryKey;autoIncrement"`
-	Username         string
-	OriginalUsername string
-	Email            string
-	EmailVerified    bool
-	PasswordHash     string `gorm:"type:varchar(255);not null"`
-	PasswordSalt     string `gorm:"type:varchar(255);not null"`
-	LastLoginUTC     int64
-	LastActiveUTC    int64
+	ID               uint   `gorm:"primaryKey;autoIncrement" json:"id"`
+	Username         string `json:"username"`
+	OriginalUsername string `json:"originalUsername"`
+	Email            string `json:"email"`
+	IsEmailVerified  bool   `json:"isEmailVerified"`
+	PasswordHash     string `gorm:"type:varchar(255);not null" json:"-"`
+	PasswordSalt     string `gorm:"type:varchar(255);not null" json:"-"`
+	LastLoginUTC     int64  `json:"lastLoginUTC"`
+	LastActiveUTC    int64  `json:"lastActiveUTC"`
 
 	// Roles
-	IsAdmin bool
+	IsAdmin bool `json:"isAdmin"`
 
 	// Ban
-	IsBanned  bool
-	UnBanUTC  int64
-	BanReason string
+	IsBanned  bool   `json:"isBanned"`
+	UnBanUTC  int64  `json:"unBanUTC"`
+	BanReason string `json:"banReason"`
 
 	// Personalization
-	NameColor string `gorm:"type:varchar(7);default:#FF69B4"`
+	NameColor string `gorm:"type:varchar(7);default:#FF69B4" json:"nameColor"`
 }
