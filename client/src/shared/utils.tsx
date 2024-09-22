@@ -1,5 +1,4 @@
 import { Article, Email, Home, Map, Navigation, NearMe, Person, Shield } from '@mui/icons-material';
-import exp from 'constants';
 import { baseUrl } from './api';
 
 export const formatTimestamp = (timestamp: number): string => {

@@ -10,12 +10,12 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      console.log(action.payload);
       return {
         ...state,
         ...action.payload
       };
     },
+    // @ts-ignore TODO
     clearUser: (state) => {
       state = {
         ...initialState
