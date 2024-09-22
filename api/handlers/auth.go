@@ -189,6 +189,7 @@ type UserSession struct {
 func (h *Handler) CheckSessionHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := h.Store.Get(r, "session")
 	if err != nil {
+		println("It is this")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -196,7 +197,7 @@ func (h *Handler) CheckSessionHandler(w http.ResponseWriter, r *http.Request) {
 	userID := session.Values["id"]
 
 	userSession := UserSession{
-		ID:        userID.(uint),
+		ID:        0,
 		Username:  "",
 		IsAdmin:   false,
 		NameColor: "",
@@ -213,6 +214,7 @@ func (h *Handler) CheckSessionHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		userSession.ID = userID.(uint)
 		userSession.Username = user.Username
 		userSession.IsAdmin = user.IsAdmin
 		userSession.NameColor = user.NameColor

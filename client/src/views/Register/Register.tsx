@@ -14,13 +14,12 @@ const Register = () => {
     <>
       <PageHeader text="Register" />
       <Form onSubmit={handleSubmit(handleSubmitRegister)}>
-        <TextField label="Username" fullWidth {...register('username', { required: true })} />
+        <TextField label="Username" fullWidth {...register('username', { required: true })} autoFocus />
         <TextField
           label="Email"
           fullWidth
           {...register('email', { required: false })}
           autoComplete="email"
-          autoFocus
         />
         <TextField
           label="Password"

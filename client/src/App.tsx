@@ -53,7 +53,7 @@ const App = () => {
   } = useSelector((state: TODO) => state.notifications);
 
   useEffect(() => {
-    if (!user.id) {
+    if (user.id === null) {
       handleCheckSession();
     }
   }, [user]);
