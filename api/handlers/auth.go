@@ -478,6 +478,17 @@ func (h *Handler) UpdateProfilePictureHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	// Delete old upload entry
+	var oldUpload models.Upload
+	result = h.DB.Where("created_user_id = ? AND category = 'pfp'", user.ID).First(&oldUpload)
+	if result.Error == nil {
+		result = h.DB.Delete(&oldUpload)
+		if result.Error != nil {
+			http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
 	upload := models.Upload{
 		CreatedUserID: user.ID,
 		Category:      "pfp",
