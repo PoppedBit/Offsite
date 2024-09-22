@@ -6,7 +6,7 @@ import {
   BottomNavigationAction,
   Typography
 } from '@mui/material';
-import { Login, Profile, Register, Settings } from './views';
+import { Admin, Login, Profile, Register, Settings } from './views';
 import 'shared/styles/App.scss';
 import {
   setErrorMessage,
@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
 import { Dialog, Snackbars, Loading, Header } from 'shared/components';
 import {
+  AdminPanelSettings,
   Home,
   Login as LoginIcon,
   Logout,
@@ -72,7 +73,22 @@ const App = () => {
         icon={<SettingsIcon />}
         component={Link}
         to="/settings"
-      />,
+      />
+    );
+
+    if (user.isAdmin) {
+      bottomNavigationItems.push(
+        <BottomNavigationAction
+          key="admin"
+          label="Admin"
+          icon={<AdminPanelSettings />}
+          component={Link}
+          to="/admin"
+        />
+      );
+    }
+
+    bottomNavigationItems.push(
       <BottomNavigationAction
         key="logout"
         label="Logout"
@@ -81,6 +97,7 @@ const App = () => {
         onClick={handleClickLogout}
       />
     );
+
   } else {
     bottomNavigationItems.push(
       <BottomNavigationAction
@@ -109,6 +126,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/settings/:tab?" element={<Settings />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="/:username" element={<Profile />} />
             <Route path="/" element={<div>Home</div>} />
           </Routes>
