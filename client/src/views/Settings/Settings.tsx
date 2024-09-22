@@ -1,15 +1,6 @@
 import { Form, PageHeader } from 'shared/components';
 import { useForm } from 'react-hook-form';
-import {
-  Button,
-  FormControl,
-  IconButton,
-  Tab,
-  Tabs,
-  TextField,
-  Tooltip,
-  Typography
-} from '@mui/material';
+import { Button, FormControl, IconButton, Tab, Tabs, TextField, Tooltip, Typography } from '@mui/material';
 import { CirclePicker } from 'react-color';
 import { useAccountSettings } from 'hooks';
 import { useEffect } from 'react';
@@ -44,7 +35,7 @@ const Settings = () => {
     handleSubmit: submitUserName,
     setValue: setUsernameValue,
     reset: resetUsername,
-    watch
+    watch,
   } = useForm();
   const { register: registerPFP, reset: resetPFP } = useForm();
   const { register: registerPassword, handleSubmit: submitPassword } = useForm();
@@ -62,7 +53,7 @@ const Settings = () => {
 
   const handleTabChange = (_event: React.ChangeEvent<{}>, newValue: string) => {
     navigate(`/settings/${newValue}`);
-  };
+  }
 
   const onSubmitUsername = (data: TODO) => {
     const { username, nameColor } = data;
@@ -102,10 +93,10 @@ const Settings = () => {
       <PageHeader text="Settings" />
       {/* Tabs */}
       <Tabs value={tab} onChange={handleTabChange}>
-        <Tab label="Username" value="username" />
-        <Tab label="Email" value="email" />
-        <Tab label="Profile Picture" value="pfp" />
-        <Tab label="Security" value="security" />
+        <Tab label="Username" value='username'/>
+        <Tab label="Email" value='email' />
+        <Tab label="Profile Picture" value='pfp'  />
+        <Tab label="Security" value='security' />
       </Tabs>
       {tab === 'username' && (
         <section>
@@ -117,7 +108,7 @@ const Settings = () => {
               label="Username"
               fullWidth
               {...registerUsername('username', { required: true })}
-            />
+            />        
             <FormControl>
               <CirclePicker
                 onChange={(color) => {
@@ -137,13 +128,13 @@ const Settings = () => {
           </Form>
         </section>
       )}
-      {tab === 'email' && (
+      { tab === 'email' && (
         <section>
           <Typography>Email: {email}</Typography>
           <Typography>Email Verified: {emailVerified ? 'Yes' : 'No'}</Typography>
         </section>
       )}
-      {tab === 'pfp' && (
+      { tab === 'pfp' && (
         <section>
           <Form>
             <PFPAvatar src={getUserPFP(user.id)}>
@@ -152,7 +143,7 @@ const Settings = () => {
             {pfp.length > 0 && (
               <Typography>
                 {pfp}
-                <Tooltip title="Delete Profile Picture" placement="top">
+                <Tooltip title="Delete Profile Picture" placement='top'>
                   <IconButton onClick={handleClickDeletePFP} disabled={isSubmitting === 'pfp'}>
                     <Delete />
                   </IconButton>
@@ -179,7 +170,7 @@ const Settings = () => {
           </Form>
         </section>
       )}
-      {tab === 'security' && (
+      { tab === 'security' && (
         <section>
           <Form onSubmit={submitPassword(onSubmitPassword)}>
             <TextField
