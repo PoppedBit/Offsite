@@ -108,7 +108,7 @@ const App = () => {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/settings/:tab?" element={<Settings />} />
             <Route path="/:username" element={<Profile />} />
             <Route path="/" element={<div>Home</div>} />
           </Routes>

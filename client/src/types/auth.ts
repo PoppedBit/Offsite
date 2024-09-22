@@ -5,4 +5,5 @@ export type User = {
   email: string;
   emailVerified: boolean;
   nameColor: string;
+  pfp: string;
 };

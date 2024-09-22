@@ -42,10 +42,10 @@ interface AccountLinkTextProps {
 }
 
 export const AccountLinkText = styled(Typography)<AccountLinkTextProps>(({ backgroundColor }) => ({
-  marginLeft: '8px',
+  marginLeft: '.5rem',
   color: 'inherit',
   textDecoration: 'none',
   backgroundColor: backgroundColor || '#FF69B4',
-  padding: '4px 8px',
-  borderRadius: '4px'
+  padding: '.25rem .5rem',
+  borderRadius: '.25rem'
 }));

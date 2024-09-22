@@ -1,6 +1,6 @@
 import { Divider, Form, PageHeader } from 'shared/components';
 import { useForm } from 'react-hook-form';
-import { Button, IconButton, TextField, Tooltip, Typography } from '@mui/material';
+import { Button, FormControl, IconButton, Tab, Tabs, TextField, Tooltip, Typography } from '@mui/material';
 import { CirclePicker } from 'react-color';
 import { useAccountSettings } from 'hooks';
 import { useEffect } from 'react';
@@ -10,10 +10,13 @@ import { User } from 'types';
 import { setErrorMessage } from 'store/slices/notifications';
 import { getUserPFP } from 'shared/utils';
 import { AccountCircle, Delete } from '@mui/icons-material';
-import { PFPAvatar } from './styles';
+import { PFPAvatar, UsernamePreview } from './styles';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Settings = () => {
   const dispatch = useDispatch();
+  const { tab = 'username' } = useParams<{ tab: string }>();
+  const navigate = useNavigate();
   const {
     isLoading,
     isSubmitting,
@@ -31,7 +34,8 @@ const Settings = () => {
     register: registerUsername,
     handleSubmit: submitUserName,
     setValue: setUsernameValue,
-    reset: resetUsername
+    reset: resetUsername,
+    watch,
   } = useForm();
   const { register: registerPFP, reset: resetPFP } = useForm();
   const { register: registerPassword, handleSubmit: submitPassword } = useForm();
@@ -46,6 +50,10 @@ const Settings = () => {
       nameColor
     });
   }, [user]);
+
+  const handleTabChange = (_event: React.ChangeEvent<{}>, newValue: string) => {
+    navigate(`/settings/${newValue}`);
+  }
 
   const onSubmitUsername = (data: TODO) => {
     const { username, nameColor } = data;
@@ -83,99 +91,113 @@ const Settings = () => {
   return (
     <>
       <PageHeader text="Settings" />
-      <section>
-        <Form onSubmit={submitUserName(onSubmitUsername)}>
-          <Typography>
-            Your original username will always stay reserved for you: {originalUsername}
-          </Typography>
-          <TextField
-            label="Username"
-            fullWidth
-            {...registerUsername('username', { required: true })}
-          />
-          <TextField
-            label="Username Color"
-            fullWidth
-            {...registerUsername('nameColor', { required: true })}
-          />
-          <CirclePicker
-            onChange={(color) => {
-              setUsernameValue('nameColor', color.hex);
-            }}
-          />
-          <Typography>Preview: {username} (TODO:Color)</Typography>
-          <Button variant="contained" type="submit" disabled={isSubmitting === 'username'}>
-            Update Username
-          </Button>
-        </Form>
-      </section>
-      <Divider />
-      <section>
-        <Typography>Email: {email}</Typography>
-        <Typography>Email Verified: {emailVerified ? 'Yes' : 'No'}</Typography>
-      </section>
-      <Divider />
-      <section>
-        <Form>
-          <PFPAvatar src={getUserPFP(user.id)}>
-            <AccountCircle />
-          </PFPAvatar>
-          {pfp.length > 0 && (
+      {/* Tabs */}
+      <Tabs value={tab} onChange={handleTabChange}>
+        <Tab label="Username" value='username'/>
+        <Tab label="Email" value='email' />
+        <Tab label="Profile Picture" value='pfp'  />
+        <Tab label="Security" value='security' />
+      </Tabs>
+      {tab === 'username' && (
+        <section>
+          <Form onSubmit={submitUserName(onSubmitUsername)}>
             <Typography>
-              {pfp}
-              <Tooltip title="Delete Profile Picture" placement='top'>
-                <IconButton onClick={handleClickDeletePFP} disabled={isSubmitting === 'pfp'}>
-                  <Delete />
-                </IconButton>
-              </Tooltip>
+              Your original username will always stay reserved for you: {originalUsername}
             </Typography>
-          )}
-          <Button variant="contained" component="label" disabled={isSubmitting === 'pfp'}>
-            Upload File
-            <input
-              type="file"
-              hidden
-              {...registerPFP('file', { required: true })}
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target?.files?.[0]; // Access the file directly from the event
-                if (file) {
-                  // Trigger the form submission manually
-                  onSubmitPFP(file);
-                }
-              }}
-              disabled={Boolean(isSubmitting)}
+            <TextField
+              label="Username"
+              fullWidth
+              {...registerUsername('username', { required: true })}
+            />        
+            <FormControl>
+              <CirclePicker
+                onChange={(color) => {
+                  setUsernameValue('nameColor', color.hex);
+                }}
+              />
+            </FormControl>
+            <TextField
+              label="Username Color"
+              fullWidth
+              {...registerUsername('nameColor', { required: true })}
             />
-          </Button>
-        </Form>
-      </section>
-      <Divider />
-      <section>
-        <Form onSubmit={submitPassword(onSubmitPassword)}>
-          <TextField
-            label="Old Password"
-            type="password"
-            fullWidth
-            {...registerPassword('oldPassword', { required: true })}
-            autoComplete="current-password"
-          />
-          <TextField
-            label="New Password"
-            type="password"
-            fullWidth
-            {...registerPassword('newPassword', { required: true })}
-          />
-          <TextField
-            label="Confirm New Password"
-            type="password"
-            fullWidth
-            {...registerPassword('confirmPassword', { required: true })}
-          />
-          <Button variant="contained" type="submit" disabled={isSubmitting === 'password'}>
-            Update Password
-          </Button>
-        </Form>
-      </section>
+            <UsernamePreview backgroundColor={watch('nameColor')}>{username}</UsernamePreview>
+            <Button variant="contained" type="submit" disabled={isSubmitting === 'username'}>
+              Update Username
+            </Button>
+          </Form>
+        </section>
+      )}
+      { tab === 'email' && (
+        <section>
+          <Typography>Email: {email}</Typography>
+          <Typography>Email Verified: {emailVerified ? 'Yes' : 'No'}</Typography>
+        </section>
+      )}
+      { tab === 'pfp' && (
+        <section>
+          <Form>
+            <PFPAvatar src={getUserPFP(user.id)}>
+              <AccountCircle />
+            </PFPAvatar>
+            {pfp.length > 0 && (
+              <Typography>
+                {pfp}
+                <Tooltip title="Delete Profile Picture" placement='top'>
+                  <IconButton onClick={handleClickDeletePFP} disabled={isSubmitting === 'pfp'}>
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
+              </Typography>
+            )}
+            <Button variant="contained" component="label" disabled={isSubmitting === 'pfp'}>
+              Upload File
+              <input
+                type="file"
+                hidden
+                {...registerPFP('file', { required: true })}
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target?.files?.[0]; // Access the file directly from the event
+                  if (file) {
+                    // Trigger the form submission manually
+                    onSubmitPFP(file);
+                  }
+                }}
+                disabled={Boolean(isSubmitting)}
+              />
+            </Button>
+          </Form>
+        </section>
+      )}
+      { tab === 'security' && (
+        <section>
+          <Form onSubmit={submitPassword(onSubmitPassword)}>
+            <TextField
+              label="Old Password"
+              type="password"
+              fullWidth
+              {...registerPassword('oldPassword', { required: true })}
+              autoComplete="current-password"
+            />
+            <TextField
+              label="New Password"
+              type="password"
+              fullWidth
+              {...registerPassword('newPassword', { required: true })}
+            />
+            <TextField
+              label="Confirm New Password"
+              type="password"
+              fullWidth
+              {...registerPassword('confirmPassword', { required: true })}
+            />
+            <Button variant="contained" type="submit" disabled={isSubmitting === 'password'}>
+              Update Password
+            </Button>
+          </Form>
+        </section>
+      )}
     </>
   );
 };
