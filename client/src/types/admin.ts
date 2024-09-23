@@ -8,7 +8,7 @@ export type User = {
   lastActiveDate: Date;
   isAdmin: boolean;
   isBanned: boolean;
-  unBanUTC: Date;
+  unBanDate: Date;
   banReason: string;
   nameColor: string;
   createdAt: Date;

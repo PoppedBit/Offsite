@@ -69,7 +69,7 @@ const Users = () => {
       render: (isBanned: boolean, user: User) => {
         console.log(user);
         return isBanned 
-          ? <Tooltip title={`${user.banReason}`}>
+          ? <Tooltip title={`${user.banReason}: ${user.unBanDate}`}>
               <Block />
             </Tooltip> 
           : '';
