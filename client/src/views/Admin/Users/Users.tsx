@@ -1,18 +1,23 @@
-import { Typography } from "@mui/material";
+import { Block } from "@mui/icons-material";
+import { Tooltip, Typography } from "@mui/material";
 import { useAdminUsers } from "hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { GreenCheck, PageHeader, Table } from "shared/components";
+import { BanUserDialog, GreenCheck, PageHeader, Table } from "shared/components";
 import { TableAction, TableColumn, TODO } from "shared/types";
 import { formatTimestamp } from "shared/utils";
+import { User } from "types/admin";
 
 const Users = () => {
 
-   const {
+  const {
     isLoading,
     getUsers,
-   } = useAdminUsers();
-   const { users } = useSelector((state: TODO) => state.admin);
+    banUser,
+  } = useAdminUsers();
+  const { users } = useSelector((state: TODO) => state.admin);
+
+  const [isBanOpen, setIsBanOpen] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if(!users && !isLoading){
@@ -22,6 +27,10 @@ const Users = () => {
 
   if (isLoading) {
     return <Typography>Loading...</Typography>;
+  }
+
+  const handleSubmitBan = (data: TODO) => {
+    banUser(isBanOpen!, data.reason);
   }
 
   const columns: TableColumn[] = [
@@ -43,26 +52,31 @@ const Users = () => {
     {
       dataIndex: 'isEmailVerified',
       label: 'Email Verified',
-      render: (data: TODO) => {
-        return data ? <div>TODO</div> : '';
+      render: (isEmailVerified: boolean) => {
+        return isEmailVerified ? <div>TODO</div> : '';
       }
     },
     {
       dataIndex: 'isAdmin',
       label: 'Is Admin?',
-      render: (data: TODO) => {
-        return data ? <GreenCheck /> : '';
+      render: (isAdmin: boolean) => {
+        return isAdmin ? <GreenCheck /> : '';
       }
     },
     {
       dataIndex: 'isBanned',
       label: 'Is Banned?',
-      render: (data: TODO) => {
-        return data ? <div>TODO</div> : '';
+      render: (isBanned: boolean, user: User) => {
+        console.log(user);
+        return isBanned 
+          ? <Tooltip title={`${user.banReason}`}>
+              <Block />
+            </Tooltip> 
+          : '';
       }
     },
     {
-      dataIndex: 'createdTimestamp',
+      dataIndex: 'createdAt',
       label: 'Created',
       render: (data: TODO) => {
         return formatTimestamp(data) ?? '';
@@ -70,13 +84,11 @@ const Users = () => {
     }
   ];
 
-  console.log(users);
-
   const actions: TableAction[] = [
     {
       label: 'Ban',
-      onClick: () => {
-        alert('TODO');
+      onClick: (user: User) => {
+        setIsBanOpen(user.id);
       }
     },
   ];
@@ -88,6 +100,12 @@ const Users = () => {
         columns={columns} 
         data={users ?? []} 
         actions={actions} 
+      />
+      <BanUserDialog 
+        isOpen={Boolean(isBanOpen)} 
+        onSubmit={handleSubmitBan}
+        onClose={() => setIsBanOpen(undefined)} 
+        user={isBanOpen ? users.find((user: User) => user.id === isBanOpen) : {}}
       />
     </>
   );

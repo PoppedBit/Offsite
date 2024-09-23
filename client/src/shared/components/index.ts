@@ -1,3 +1,4 @@
+export { BanUserDialog } from './BanUserDialog';
 export { Dialog } from './Dialog';
 export { Footer } from './Footer';
 export { Header } from './Header';

@@ -4,7 +4,15 @@ export type User = {
   originalUsername: string;
   email: string;
   isEmailVerified: boolean;
+  lastLoginDate: Date;
+  lastActiveDate: Date;
+  isAdmin: boolean;
+  isBanned: boolean;
+  unBanUTC: Date;
+  banReason: string;
   nameColor: string;
-  pfp: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
 };
   

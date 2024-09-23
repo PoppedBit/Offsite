@@ -1,12 +1,13 @@
-import { requestUsers } from "api";
+import { requestBanUser, requestUsers } from "api";
 import { useState } from "react"
 import { useDispatch } from "react-redux";
-import { setUsers } from "store/slices/admin";
-import { setErrorMessage } from "store/slices/notifications";
+import { setUsers, updateUser } from "store/slices/admin";
+import { setErrorMessage, setSuccessMessage } from "store/slices/notifications";
 
 export const useAdminUsers = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const getUsers = async () => {
     setIsLoading(true);
@@ -20,17 +21,44 @@ export const useAdminUsers = () => {
       } else {
         const error = await response.text();
         dispatch(setErrorMessage(error));
+        dispatch(setUsers([]));
       }
     } catch (e) {
       console.log(e);
       dispatch(setErrorMessage('An unexpected error occured'));    
+      dispatch(setUsers([]));
     } finally {
       setIsLoading(false);
     }
   }
 
+  const banUser = async (userId: number, reason: string, unBanDate?: Date) => {
+    setIsSubmitting(true);
+
+    try {
+      const response = await requestBanUser(userId, reason, unBanDate);
+
+      if (response.status === 200) {
+        const data = await response.json();
+        dispatch(updateUser(data));
+        dispatch(setSuccessMessage('User has been banned'));
+      } else {
+        const error = await response.text();
+        dispatch(setErrorMessage(error));
+      }
+    } catch (e) {
+      console.log(e);
+      dispatch(setErrorMessage('An unexpected error occured'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+
   return {
     isLoading,
+    isSubmitting,
     getUsers,
+    banUser,
   };
 }

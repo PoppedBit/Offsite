@@ -3,9 +3,31 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/PoppedBit/OffSite/models"
+	"github.com/gorilla/mux"
 )
+
+func CheckIsAdmin(h *Handler, r *http.Request) bool {
+	session, err := h.Store.Get(r, "session")
+	if err != nil {
+		return false
+	}
+
+	userID := session.Values["id"]
+	if userID == nil {
+		return false
+	}
+
+	var user models.User
+	result := h.DB.First(&user, userID)
+	if result.Error != nil {
+		return false
+	}
+
+	return user.IsAdmin
+}
 
 type GetUsersResponse struct {
 	Users []models.User `json:"users"`
@@ -50,4 +72,53 @@ func (h *Handler) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
+}
+
+type BanUserRequest struct {
+	Reason    string     `json:"reason"`
+	UnBanDate *time.Time `json:"banDuration"`
+}
+
+func (h *Handler) BanUserHandler(w http.ResponseWriter, r *http.Request) {
+	isAdmin := CheckIsAdmin(h, r)
+	if !isAdmin {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	vars := mux.Vars(r)
+	userId := vars["userId"]
+
+	var banRequest BanUserRequest
+	err := json.NewDecoder(r.Body).Decode(&banRequest)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	var targetUser models.User
+	result := h.DB.First(&targetUser, userId)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	targetUser.IsBanned = true
+	targetUser.BanReason = banRequest.Reason
+	targetUser.UnBanDate = banRequest.UnBanDate
+	if targetUser.UnBanDate == nil {
+		// default to 1000 years
+		unbanDate := time.Now().AddDate(1000, 0, 0)
+		targetUser.UnBanDate = &unbanDate
+	}
+
+	result = h.DB.Save(&targetUser)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(targetUser)
 }

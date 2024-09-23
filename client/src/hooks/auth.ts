@@ -55,6 +55,13 @@ export const useLogin = () => {
   };
 };
 
+const unauthenticatedSession = {
+  ID:        0,
+  Username:  "",
+  IsAdmin:   false,
+  NameColor: "",
+};
+
 export const useCheckSession = () => {
   const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -71,12 +78,12 @@ export const useCheckSession = () => {
       } else {
         const error = await response.text();
         dispatch(setErrorMessage(error));
-        dispatch(setUser(null));
+        dispatch(setUser(unauthenticatedSession));
       }
     } catch (e) {
       console.log(e);
       dispatch(setErrorMessage('An unexpected error occured'));
-      dispatch(setUser(null));
+      dispatch(setUser(unauthenticatedSession));
     } finally {
       setIsSubmitting(false);
     }

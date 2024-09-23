@@ -7,4 +7,5 @@ import (
 
 func registerAdminRoutes(r *mux.Router, handler *handlers.Handler) {
 	r.HandleFunc("/admin/users", handler.GetUsersHandler).Methods("GET")
+	r.HandleFunc("/admin/user/{userId}/ban", handler.BanUserHandler).Methods("POST")
 }
