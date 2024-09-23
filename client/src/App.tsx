@@ -97,7 +97,6 @@ const App = () => {
         onClick={handleClickLogout}
       />
     );
-
   } else {
     bottomNavigationItems.push(
       <BottomNavigationAction

@@ -1,8 +1,8 @@
-import { requestBanUser, requestUsers } from "api";
-import { useState } from "react"
-import { useDispatch } from "react-redux";
-import { setUsers, updateUser } from "store/slices/admin";
-import { setErrorMessage, setSuccessMessage } from "store/slices/notifications";
+import { requestBanUser, requestUsers } from 'api';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setUsers, updateUser } from 'store/slices/admin';
+import { setErrorMessage, setSuccessMessage } from 'store/slices/notifications';
 
 export const useAdminUsers = () => {
   const dispatch = useDispatch();
@@ -12,7 +12,7 @@ export const useAdminUsers = () => {
   const getUsers = async () => {
     setIsLoading(true);
 
-    try{
+    try {
       const response = await requestUsers();
 
       if (response.status === 200) {
@@ -25,12 +25,12 @@ export const useAdminUsers = () => {
       }
     } catch (e) {
       console.log(e);
-      dispatch(setErrorMessage('An unexpected error occured'));    
+      dispatch(setErrorMessage('An unexpected error occured'));
       dispatch(setUsers([]));
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const banUser = async (userId: number, reason: string, unBanDate?: Date) => {
     setIsSubmitting(true);
@@ -52,13 +52,12 @@ export const useAdminUsers = () => {
     } finally {
       setIsSubmitting(false);
     }
-  }
-
+  };
 
   return {
     isLoading,
     isSubmitting,
     getUsers,
-    banUser,
+    banUser
   };
-}
+};

@@ -15,4 +15,3 @@ export type User = {
   updatedAt: Date;
   deletedAt: Date;
 };
-  

@@ -14,7 +14,12 @@ const Register = () => {
     <>
       <PageHeader text="Register" />
       <Form onSubmit={handleSubmit(handleSubmitRegister)}>
-        <TextField label="Username" fullWidth {...register('username', { required: true })} autoFocus />
+        <TextField
+          label="Username"
+          fullWidth
+          {...register('username', { required: true })}
+          autoFocus
+        />
         <TextField
           label="Email"
           fullWidth

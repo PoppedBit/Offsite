@@ -1,28 +1,24 @@
-import { Block } from "@mui/icons-material";
-import { Tooltip, Typography } from "@mui/material";
-import { useAdminUsers } from "hooks";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { BanUserDialog, GreenCheck, PageHeader, Table } from "shared/components";
-import { TableAction, TableColumn, TODO } from "shared/types";
-import { formatTimestamp } from "shared/utils";
-import { setErrorMessage } from "store/slices/notifications";
-import { User } from "types/admin";
+import { Block } from '@mui/icons-material';
+import { Tooltip, Typography } from '@mui/material';
+import { useAdminUsers } from 'hooks';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { BanUserDialog, GreenCheck, PageHeader, Table } from 'shared/components';
+import { TableAction, TableColumn, TODO } from 'shared/types';
+import { formatTimestamp } from 'shared/utils';
+import { setErrorMessage } from 'store/slices/notifications';
+import { User } from 'types/admin';
 
 const Users = () => {
   const dispatch = useDispatch();
 
-  const {
-    isLoading,
-    getUsers,
-    banUser,
-  } = useAdminUsers();
+  const { isLoading, getUsers, banUser } = useAdminUsers();
   const { users } = useSelector((state: TODO) => state.admin);
 
   const [isBanOpen, setIsBanOpen] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    if(!users && !isLoading){
+    if (!users && !isLoading) {
       getUsers();
     }
   }, [users, getUsers, isLoading]);
@@ -33,7 +29,7 @@ const Users = () => {
 
   const handleSubmitBan = (data: TODO) => {
     banUser(isBanOpen!, data.reason);
-  }
+  };
 
   const columns: TableColumn[] = [
     {
@@ -60,21 +56,23 @@ const Users = () => {
     },
     {
       dataIndex: 'isAdmin',
-      label: 'Is Admin?',
+      label: 'Admin?',
       render: (isAdmin: boolean) => {
         return isAdmin ? <GreenCheck /> : '';
       }
     },
     {
       dataIndex: 'isBanned',
-      label: 'Is Banned?',
+      label: 'Banned?',
       render: (isBanned: boolean, user: User) => {
         console.log(user);
-        return isBanned 
-          ? <Tooltip title={`${user.banReason}: ${user.unBanDate}`}>
-              <Block />
-            </Tooltip> 
-          : '';
+        return isBanned ? (
+          <Tooltip title={`${user.banReason}: ${user.unBanDate}`}>
+            <Block />
+          </Tooltip>
+        ) : (
+          ''
+        );
       }
     },
     {
@@ -90,31 +88,27 @@ const Users = () => {
     {
       label: 'Ban',
       onClick: (user: User) => {
-        if(user.isBanned || user.isAdmin){
-          dispatch(setErrorMessage("You cannot ban this user."));
+        if (user.isBanned || user.isAdmin) {
+          dispatch(setErrorMessage('You cannot ban this user.'));
           return;
         }
         setIsBanOpen(user.id);
       }
-    },
+    }
   ];
 
   return (
     <>
       <PageHeader text="Users" />
-      <Table 
-        columns={columns} 
-        data={users ?? []} 
-        actions={actions} 
-      />
-      <BanUserDialog 
-        isOpen={Boolean(isBanOpen)} 
+      <Table columns={columns} data={users ?? []} actions={actions} />
+      <BanUserDialog
+        isOpen={Boolean(isBanOpen)}
         onSubmit={handleSubmitBan}
-        onClose={() => setIsBanOpen(undefined)} 
+        onClose={() => setIsBanOpen(undefined)}
         user={isBanOpen ? users.find((user: User) => user.id === isBanOpen) : {}}
       />
     </>
   );
-}
+};
 
 export default Users;

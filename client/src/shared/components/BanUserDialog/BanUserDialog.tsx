@@ -1,9 +1,9 @@
-import { User } from "types/admin";
-import { Dialog, Form } from "shared/components";
-import { Button, TextField } from "@mui/material";
-import { useForm } from "react-hook-form";
-import { useEffect } from "react";
-import { TODO } from "shared/types";
+import { User } from 'types/admin';
+import { Dialog, Form } from 'shared/components';
+import { Button, TextField } from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { TODO } from 'shared/types';
 
 interface Props {
   isOpen: boolean;
@@ -15,11 +15,7 @@ interface Props {
 const BanUserDialog = (props: Props) => {
   const { isOpen, onSubmit, onClose, user } = props;
 
-  const {
-    register,
-    reset,
-    handleSubmit,
-  } = useForm();
+  const { register, reset, handleSubmit } = useForm();
 
   useEffect(() => {
     if (!isOpen) {
@@ -32,26 +28,27 @@ const BanUserDialog = (props: Props) => {
     onClose();
   };
 
-  return <Dialog 
-    isOpen={isOpen} 
-    onClose={onClose} 
-    title={`Ban ${user.username}?`}
-    fullWidth={false}
-    buttons={<>
-      <Button onClick={onClose}>Cancel</Button>
-      <Button variant="contained" onClick={handleSubmit(handleClickSubmit)}>Submit</Button>
-    </>}
-  >
-    <Form onSubmit={handleSubmit(handleClickSubmit)}>
-      <TextField
-        {...register('reason')}
-        label="Ban Reason"
-        required
-      />
-      {/* TODO - Date */}
-    </Form>
-  </Dialog>
-
+  return (
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title={`Ban ${user.username}?`}
+      fullWidth={false}
+      buttons={
+        <>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button variant="contained" onClick={handleSubmit(handleClickSubmit)}>
+            Submit
+          </Button>
+        </>
+      }
+    >
+      <Form onSubmit={handleSubmit(handleClickSubmit)}>
+        <TextField {...register('reason')} label="Ban Reason" required />
+        {/* TODO - Date */}
+      </Form>
+    </Dialog>
+  );
 };
 
 export default BanUserDialog;

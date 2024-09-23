@@ -1,4 +1,4 @@
-import { baseUrl, getPostConfig, getRequestConfig } from "shared/api";
+import { baseUrl, getPostConfig, getRequestConfig } from 'shared/api';
 
 export const requestUsers = async () => {
   const config = getRequestConfig();
@@ -11,4 +11,4 @@ export const requestBanUser = async (userId: number, reason: string, unBanDate?:
     unBanDate
   });
   return await fetch(`${baseUrl}/admin/user/${userId}/ban`, config);
-}
+};

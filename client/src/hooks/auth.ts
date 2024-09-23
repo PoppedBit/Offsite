@@ -56,10 +56,10 @@ export const useLogin = () => {
 };
 
 const unauthenticatedSession = {
-  ID:        0,
-  Username:  "",
-  IsAdmin:   false,
-  NameColor: "",
+  ID: 0,
+  Username: '',
+  IsAdmin: false,
+  NameColor: ''
 };
 
 export const useCheckSession = () => {

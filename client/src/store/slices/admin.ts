@@ -6,7 +6,7 @@ interface AdminState {
 }
 
 const initialState: AdminState = {
-  users: undefined,
+  users: undefined
 };
 
 const adminSlice = createSlice({
@@ -26,9 +26,6 @@ const adminSlice = createSlice({
   }
 });
 
-export const {
-  setUsers,
-  updateUser,
-} = adminSlice.actions;
+export const { setUsers, updateUser } = adminSlice.actions;
 
 export default adminSlice.reducer;
