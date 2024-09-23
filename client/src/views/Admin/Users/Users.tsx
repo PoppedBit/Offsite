@@ -2,13 +2,15 @@ import { Block } from "@mui/icons-material";
 import { Tooltip, Typography } from "@mui/material";
 import { useAdminUsers } from "hooks";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BanUserDialog, GreenCheck, PageHeader, Table } from "shared/components";
 import { TableAction, TableColumn, TODO } from "shared/types";
 import { formatTimestamp } from "shared/utils";
+import { setErrorMessage } from "store/slices/notifications";
 import { User } from "types/admin";
 
 const Users = () => {
+  const dispatch = useDispatch();
 
   const {
     isLoading,
@@ -88,6 +90,10 @@ const Users = () => {
     {
       label: 'Ban',
       onClick: (user: User) => {
+        if(user.isBanned || user.isAdmin){
+          dispatch(setErrorMessage("You cannot ban this user."));
+          return;
+        }
         setIsBanOpen(user.id);
       }
     },
