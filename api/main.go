@@ -5,12 +5,15 @@ import (
 	"net/http"
 	"os"
 
+	_ "github.com/PoppedBit/OffSite/docs" // This imports the generated swagger docs
+
 	"github.com/PoppedBit/OffSite/handlers"
 	"github.com/PoppedBit/OffSite/models"
 	"github.com/PoppedBit/OffSite/routes"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func main() {
@@ -37,9 +40,11 @@ func main() {
 
 	// Router
 	router := mux.NewRouter()
-	// router.Use(InjectAuthStatus(cookieStore))
 	routes.RegisterRoutes(router, handler)
 	http.Handle("/", router)
+
+	// Swagger
+	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
 	// Server
 	port := os.Getenv("PORT")

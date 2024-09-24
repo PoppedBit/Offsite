@@ -48,6 +48,13 @@ type RegisterRequest struct {
 	Password string `json:"password"`
 }
 
+// @Summary Register User
+// @Description Register a new user
+// @Accept json
+// @Produce json
+// @Param body body RegisterRequest true "Register Request"
+// @Success 201 {string} string "User created"
+// @Router /register [post]
 func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	// Parse the JSON request body
 	var registerRequest RegisterRequest
