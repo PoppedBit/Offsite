@@ -14,7 +14,7 @@ export const getRequestConfig = () => {
   return config as RequestInit;
 };
 
-export const getPostConfig = (data: any) => {
+export const getPostConfig = (data: any = {}) => {
   const config = {
     method: 'POST',
     mode: 'cors',

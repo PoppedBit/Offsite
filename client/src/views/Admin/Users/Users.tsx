@@ -1,4 +1,3 @@
-import { Block } from '@mui/icons-material';
 import { Tooltip, Typography } from '@mui/material';
 import { useAdminUsers } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -8,11 +7,12 @@ import { TableAction, TableColumn, TODO } from 'shared/types';
 import { formatTimestamp } from 'shared/utils';
 import { setErrorMessage } from 'store/slices/notifications';
 import { User } from 'types/admin';
+import { BannedIcon } from './styles';
 
 const Users = () => {
   const dispatch = useDispatch();
 
-  const { isLoading, getUsers, banUser } = useAdminUsers();
+  const { isLoading, getUsers, banUser, unBanUser } = useAdminUsers();
   const { users } = useSelector((state: TODO) => state.admin);
 
   const [isBanOpen, setIsBanOpen] = useState<number | undefined>(undefined);
@@ -51,7 +51,7 @@ const Users = () => {
       dataIndex: 'isEmailVerified',
       label: 'Email Verified',
       render: (isEmailVerified: boolean) => {
-        return isEmailVerified ? <div>TODO</div> : '';
+        return isEmailVerified ? <GreenCheck /> : '';
       }
     },
     {
@@ -65,10 +65,9 @@ const Users = () => {
       dataIndex: 'isBanned',
       label: 'Banned?',
       render: (isBanned: boolean, user: User) => {
-        console.log(user);
         return isBanned ? (
-          <Tooltip title={`${user.banReason}: ${user.unBanDate}`}>
-            <Block />
+          <Tooltip title={`${user.banReason}: Until ${user.unBanDate}`}>
+            <BannedIcon />
           </Tooltip>
         ) : (
           ''
@@ -93,6 +92,16 @@ const Users = () => {
           return;
         }
         setIsBanOpen(user.id);
+      }
+    },
+    {
+      label: 'Un-Ban',
+      onClick: (user: User) => {
+        if (!user.isBanned) {
+          dispatch(setErrorMessage('This user is not banned.'));
+          return;
+        }
+        unBanUser(user.id);
       }
     }
   ];

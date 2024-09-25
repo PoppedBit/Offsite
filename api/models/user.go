@@ -30,7 +30,7 @@ type User struct {
 	NameColor string `gorm:"type:varchar(7);default:#FF69B4" json:"nameColor"`
 
 	// GORM default properties
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
-	DeletedAt time.Time `json:"deletedAt"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
+	DeletedAt *time.Time `json:"deletedAt"`
 }

@@ -1,4 +1,4 @@
-import { requestBanUser, requestUsers } from 'api';
+import { requestBanUser, requestUnBanUser, requestUsers } from 'api';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUsers, updateUser } from 'store/slices/admin';
@@ -54,10 +54,33 @@ export const useAdminUsers = () => {
     }
   };
 
+  const unBanUser = async (userId: number) => {
+    setIsSubmitting(true);
+
+    try {
+      const response = await requestUnBanUser(userId);
+
+      if (response.status === 200) {
+        const data = await response.json();
+        dispatch(updateUser(data));
+        dispatch(setSuccessMessage('User has been unbanned'));
+      } else {
+        const error = await response.text();
+        dispatch(setErrorMessage(error));
+      }
+    } catch (e) {
+      console.log(e);
+      dispatch(setErrorMessage('An unexpected error occured'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return {
     isLoading,
     isSubmitting,
     getUsers,
-    banUser
+    banUser,
+    unBanUser,
   };
 };

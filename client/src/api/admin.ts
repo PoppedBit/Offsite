@@ -12,3 +12,8 @@ export const requestBanUser = async (userId: number, reason: string, unBanDate?:
   });
   return await fetch(`${baseUrl}/admin/user/${userId}/ban`, config);
 };
+
+export const requestUnBanUser = async (userId: number) => {
+  const config = getPostConfig();
+  return await fetch(`${baseUrl}/admin/user/${userId}/unban`, config);
+}
