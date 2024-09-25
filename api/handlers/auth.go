@@ -200,6 +200,11 @@ type UserSession struct {
 	NameColor string `json:"nameColor"`
 }
 
+// @Router /check-session [get]
+// @Tags auth
+// @Summary Check Session
+// @Produce json
+// @Success 200
 func (h *Handler) CheckSessionHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := h.Store.Get(r, "session")
 	if err != nil {
@@ -237,6 +242,11 @@ func (h *Handler) CheckSessionHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(userSession)
 }
 
+// @Router /logout [get]
+// @Tags auth
+// @Summary Logout
+// @Description Logout
+// @Success 200
 func (h *Handler) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := h.Store.Get(r, "session")
 	if err != nil {

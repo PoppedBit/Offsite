@@ -32,6 +32,22 @@ const docTemplate = `{
                 }
             }
         },
+        "/check-session": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Check Session",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Login",
@@ -40,6 +56,20 @@ const docTemplate = `{
                 ],
                 "summary": "Login",
                 "responses": {}
+            }
+        },
+        "/logout": {
+            "get": {
+                "description": "Logout",
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
             }
         },
         "/register": {

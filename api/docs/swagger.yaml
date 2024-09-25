@@ -22,11 +22,30 @@ paths:
       summary: Get Users
       tags:
       - admin
+  /check-session:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Check Session
+      tags:
+      - auth
   /login:
     post:
       description: Login
       responses: {}
       summary: Login
+      tags:
+      - auth
+  /logout:
+    get:
+      description: Logout
+      responses:
+        "200":
+          description: OK
+      summary: Logout
       tags:
       - auth
   /register:
