@@ -119,6 +119,7 @@ const Settings = () => {
               {...registerUsername('username', { required: true })}
             />
             <FormControl>
+              {/* @ts-ignore */}
               <CirclePicker
                 onChange={(color) => {
                   setUsernameValue('nameColor', color.hex);
