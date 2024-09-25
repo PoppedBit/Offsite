@@ -33,6 +33,12 @@ type GetUsersResponse struct {
 	Users []models.User `json:"users"`
 }
 
+// @Router /admin/users [get]
+// @Tags admin
+// @Summary Get Users
+// @Description Get All Users
+// @Produce json
+// @Success 200
 func (h *Handler) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := h.Store.Get(r, "session")
 	if err != nil {
