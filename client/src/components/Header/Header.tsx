@@ -11,7 +11,7 @@ import {
 import { useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
 import { AccountCircle } from '@mui/icons-material';
-import { getUserPFP } from 'shared/utils';
+import { getUserPFP } from 'utils';
 
 const Header = () => {
   const user = useSelector((state: TODO) => state.user);

@@ -74,13 +74,13 @@ export const useAdminUsers = () => {
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   return {
     isLoading,
     isSubmitting,
     getUsers,
     banUser,
-    unBanUser,
+    unBanUser
   };
 };

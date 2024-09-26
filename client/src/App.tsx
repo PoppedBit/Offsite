@@ -7,7 +7,7 @@ import {
   Typography
 } from '@mui/material';
 import { Admin, Login, Profile, Register, Settings, Users } from './views';
-import 'shared/styles/App.scss';
+import 'styles/App.scss';
 import {
   setErrorMessage,
   setSuccessMessage,
@@ -16,7 +16,7 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
-import { Dialog, Snackbars, Loading, Header } from 'shared/components';
+import { Dialog, Snackbars, Loading, Header } from 'components';
 import {
   AdminPanelSettings,
   Home,

@@ -1,5 +1,5 @@
 import { User } from 'types/admin';
-import { Dialog, Form } from 'shared/components';
+import { Dialog, Form } from 'components';
 import { Button, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';

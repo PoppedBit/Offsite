@@ -2,7 +2,7 @@ import { Person } from '@mui/icons-material';
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
-import { PageHeader } from 'shared/components';
+import { PageHeader } from 'components';
 
 type NavigationItem = {
   text: string;

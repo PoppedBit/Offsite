@@ -1,12 +1,8 @@
 export { BanUserDialog } from './BanUserDialog';
 export { Dialog } from './Dialog';
-export { Footer } from './Footer';
 export { Header } from './Header';
 export { PageHeader } from './PageHeader';
 export { Loading } from './Loading';
-export { ShareMenu } from './ShareMenu';
 export { Snackbars } from './Snackbars';
-export { SpeedDial } from './SpeedDial';
 export { Table } from './Table';
-export { WYSIWYG } from './WYSIWYG';
 export * from './styles';

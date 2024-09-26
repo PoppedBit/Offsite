@@ -1,4 +1,4 @@
-import { Form, PageHeader } from 'shared/components';
+import { Form, PageHeader } from 'components';
 import { useForm } from 'react-hook-form';
 import {
   Button,
@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TODO } from 'shared/types';
 import { User } from 'types/auth';
 import { setErrorMessage } from 'store/slices/notifications';
-import { getUserPFP } from 'shared/utils';
+import { getUserPFP } from 'utils';
 import { AccountCircle, Delete } from '@mui/icons-material';
 import { PFPAvatar, UsernamePreview } from './styles';
 import { useNavigate, useParams } from 'react-router-dom';

@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { Button, TextField } from '@mui/material';
 
-import { Form, PageHeader } from 'shared/components';
+import { Form, PageHeader } from 'components';
 import { useNavigate } from 'react-router-dom';
 import { useLogin } from 'hooks';
 

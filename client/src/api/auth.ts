@@ -1,4 +1,4 @@
-import { baseUrl, getDeleteConfig, getPostConfig, getRequestConfig } from 'shared/api';
+import { baseUrl, getDeleteConfig, getPostConfig, getRequestConfig } from 'api';
 
 export const requestLogin = async (identifier: string, password: string) => {
   const data = {
